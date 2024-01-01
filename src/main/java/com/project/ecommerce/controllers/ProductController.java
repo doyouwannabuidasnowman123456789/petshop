@@ -19,4 +19,9 @@ public class ProductController {
     {
         return null;
     }
+
+    public ResponseEntity<?> create() {
+        
+        return null;
+    }
 }

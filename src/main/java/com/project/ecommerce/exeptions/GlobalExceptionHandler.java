@@ -20,4 +20,22 @@ public class GlobalExceptionHandler {
             errorMessage = e.getBindingResult().getAllErrors().get(0).getDefaultMessage();
         return new ExceptionResponseDTO("error", errorMessage);
     }
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+	public ResponseEntity<ExceptionResponseDTO> resourceNotFoundException(ResourceNotFoundException e) {
+		String message = e.getMessage();
+
+		ExceptionResponseDTO res = new ExceptionResponseDTO("error", message);
+
+		return new ResponseEntity<ExceptionResponseDTO>(res, HttpStatus.NOT_FOUND);
+	}
+
+    @ExceptionHandler(APIException.class)
+	public ResponseEntity<ExceptionResponseDTO> apiException(APIException e) {
+		String message = e.getMessage();
+
+		ExceptionResponseDTO res = new ExceptionResponseDTO("error", message);
+
+		return new ResponseEntity<ExceptionResponseDTO>(res, HttpStatus.BAD_REQUEST);
+	}
 }
