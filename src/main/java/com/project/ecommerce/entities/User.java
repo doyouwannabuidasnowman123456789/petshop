@@ -32,11 +32,11 @@ public class User {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Size(min = 5, max = 20, message = "First name must be between 5 and 30 characters long")
+    @Size(max = 20, message = "First name must be less than 20 characters long")
     @Pattern(regexp = "^[a-zA-Z]*$", message = "First Name must not contain numbers or special characters")
     private String firstname;
 
-    @Size(min = 5, max = 20, message = "Last Name must be between 5 and 30 characters long")
+    @Size(max = 20, message = "Last Name must be less than 20 characters long")
 	@Pattern(regexp = "^[a-zA-Z]*$", message = "Last Name must not contain numbers or special characters")
     private String lastname;
 

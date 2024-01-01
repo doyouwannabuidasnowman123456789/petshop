@@ -16,11 +16,11 @@ import lombok.NoArgsConstructor;
 public class RegisterRequestDTO {
 
     @NotEmpty(message = "Firstname is required")
-    @Size(min = 5, max = 20, message = "First name must be between 5 and 30 characters long")
+    @Size(max = 20, message = "First name must be less than 20 characters long")
     private String firstname;
 
     @NotEmpty(message = "Lastname is required")
-    @Size(min = 5, max = 20, message = "First name must be between 5 and 30 characters long")
+    @Size(max = 20, message = "First name must be less than 20 characters long")
     private String lastname;
 
     @NotEmpty(message = "Phone number is required")

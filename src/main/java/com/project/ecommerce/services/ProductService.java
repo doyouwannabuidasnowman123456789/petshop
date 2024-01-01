@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -22,6 +23,9 @@ import com.project.ecommerce.exeptions.ResourceNotFoundException;
 import com.project.ecommerce.repositories.CategoryRepository;
 import com.project.ecommerce.repositories.ProductRepository;
 
+import jakarta.transaction.Transactional;
+
+@Transactional
 @Service
 public class ProductService implements IProductService{
 
@@ -36,6 +40,9 @@ public class ProductService implements IProductService{
 
 	@Autowired
 	private ModelMapper modelMapper;
+
+    @Value("${project.image}")
+	private String path;
 
     @Override
     public ProductDTO addProduct(Long categoryId, Product product) {
