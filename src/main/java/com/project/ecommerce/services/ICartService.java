@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.project.ecommerce.dto.CartDTO;
 
-public interface ICartItemService {
+public interface ICartService {
     CartDTO addProductToCart(Long cartId, Long productId, Integer quantity);
 	
 	List<CartDTO> getAllCarts();
