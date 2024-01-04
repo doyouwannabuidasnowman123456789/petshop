@@ -3,6 +3,7 @@ package com.project.ecommerce.entities;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -24,6 +25,7 @@ public class Category {
     private Long id;
 
     @NotBlank
+    @Column(nullable = false)
     private String name;
 
     @OneToMany(mappedBy = "category", cascade =  CascadeType.ALL )
