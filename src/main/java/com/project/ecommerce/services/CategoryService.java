@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import com.project.ecommerce.dto.CategoryDTO;
 import com.project.ecommerce.dto.CategoryResponseDTO;
 import com.project.ecommerce.entities.Category;
-import com.project.ecommerce.entities.Product;
 import com.project.ecommerce.exeptions.APIException;
 import com.project.ecommerce.exeptions.ResourceNotFoundException;
 import com.project.ecommerce.repositories.CategoryRepository;
@@ -25,8 +24,8 @@ public class CategoryService implements ICategoryService{
     @Autowired
 	private CategoryRepository categoryRepository;
 	
-	@Autowired
-	private ProductService productService;
+	// @Autowired
+	// private ProductService productService;
 
 	@Autowired
 	private ModelMapper modelMapper;
@@ -88,17 +87,18 @@ public class CategoryService implements ICategoryService{
 
 	@Override
 	public String deleteCategory(Long categoryId) {
-		Category category = categoryRepository.findById(categoryId)
-				.orElseThrow(() -> new ResourceNotFoundException("Category", "categoryId", categoryId));
+		return null;
+		// Category category = categoryRepository.findById(categoryId)
+		// 		.orElseThrow(() -> new ResourceNotFoundException("Category", "categoryId", categoryId));
 		
-		List<Product> products = category.getProducts();
+		// List<Product> products = category.getProducts();
 
-		products.forEach(product -> {
-			productService.deleteProduct(product.getId());
-		});
+		// products.forEach(product -> {
+		// 	productService.deleteProduct(product.getId());
+		// });
 		
-		categoryRepository.delete(category);
+		// categoryRepository.delete(category);
 
-		return "Category with categoryId: " + categoryId + " deleted successfully !!!";
+		// return "Category with categoryId: " + categoryId + " deleted successfully !!!";
 	}
 }

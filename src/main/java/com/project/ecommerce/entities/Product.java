@@ -1,6 +1,15 @@
 package com.project.ecommerce.entities;
 
+import java.util.List;
+
+import jakarta.annotation.Nullable;
+import jakarta.persistence.CollectionTable;
+import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -22,21 +31,67 @@ public class Product {
     @GeneratedValue
     private Long id;
 
-    @NotBlank
-    private String name;
-    private String image;
-
-    @NotBlank
-    @Size(min = 6, max = 255, message = "Product description must between 6 and 255 characters length")
-    private String description;
-
-    @NotBlank
-    private Integer quantity;
-    private double price;
-    private double discount;
-    private Integer rating;
-
     @ManyToOne
 	@JoinColumn(name = "category_id")
 	private Category category;
+
+    @ManyToOne
+    @JoinColumn(name = "special_category_id")
+    private SpecialCategory specialCategory;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "pet_type", nullable = false)
+    private EPetType petType;
+
+    @Nullable
+    private String brand;
+
+    @NotBlank
+    @Size(min = 5, max = 100, message = "Product title must be between 5 and 100 characters length")
+    @Column(nullable = false)
+    private String title;
+
+    @Nullable
+    private String sku;
+
+    @NotBlank
+    @Size(min = 0, max = 5, message = "Rating value must be between 0 and 5")
+    @Column(nullable = false)
+    private Integer rating;
+
+    @NotBlank
+    @Size(min = 6, max = 255, message = "Product description must between 6 and 255 characters length")
+    @Column(nullable = false)
+    private String description;
+
+    @NotBlank
+    @Size(min = 0, message = "Price must be greater than 0")
+    @Column(nullable = false)
+    private double price;
+
+    @NotBlank
+    @Size(min = 0, message = "Product quantity must be greater than 0")
+    @Column(nullable = false)
+    private Integer quantity;
+    
+    @NotBlank
+    @Size(min = 0, max = 100, message = "Product discount must be between 0 and 100")
+    @Column(nullable = false)
+    private float discount;
+    
+    @Nullable
+    @Size(min = 0, message = "Special Price must be greater than 0")
+    @Column(nullable = true, name = "special_price")
+    private double specialPrice;
+
+    @Column(name = "view_number", nullable = false)
+    private int viewNumber = 0;
+
+    @Column(name = "buy_number", nullable = false)
+    private int buyNumber = 0;
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "product_images", joinColumns = @JoinColumn(name = "product_id"))
+    @Column(name = "image_url")
+    private List<String> images;
 }

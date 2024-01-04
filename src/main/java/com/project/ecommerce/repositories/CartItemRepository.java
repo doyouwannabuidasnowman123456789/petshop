@@ -7,7 +7,6 @@ import org.springframework.stereotype.Repository;
 
 import com.project.ecommerce.entities.CartItem;
 
-@Repository
 public interface CartItemRepository extends JpaRepository<CartItem, Long>{
     @Query("SELECT ci FROM CartItem ci WHERE ci.cart.id = ?1 AND ci.product.id = ?2")
 	CartItem findCartItemByProductIdAndCartId(Long cartId, Long productId);
