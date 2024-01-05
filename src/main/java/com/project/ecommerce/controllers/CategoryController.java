@@ -1,5 +1,7 @@
 package com.project.ecommerce.controllers;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.project.ecommerce.dto.CategoryDTO;
 import com.project.ecommerce.dto.CategoryRequestDTO;
 import com.project.ecommerce.dto.CategoryResponseDTO;
+import com.project.ecommerce.dto.ProductDTO;
 import com.project.ecommerce.dto.SuccessResponseDTO;
 import com.project.ecommerce.entities.Category;
 import com.project.ecommerce.services.CategoryService;
@@ -44,6 +47,12 @@ public class CategoryController {
     @RequestParam(name = "sortOrder", defaultValue = "asc", required = false) String sortOrder) {
         CategoryResponseDTO categoryResponseDTO = categoryService.getCategories(pageNumber, pageSize, sortBy, sortOrder);
         return ResponseEntity.ok(categoryResponseDTO);
+    }
+
+    @GetMapping("/{id}/products")
+    public ResponseEntity<List<ProductDTO>> getProductByCategory(@PathVariable Long id) {
+        List<ProductDTO> productDTOs = categoryService.getProductByCategory(id);
+        return ResponseEntity.ok(productDTOs);
     }
 
     @PutMapping("/{id}")

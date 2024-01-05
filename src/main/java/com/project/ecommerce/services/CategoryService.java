@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import com.project.ecommerce.dto.CategoryDTO;
 import com.project.ecommerce.dto.CategoryResponseDTO;
+import com.project.ecommerce.dto.ProductDTO;
 import com.project.ecommerce.entities.Category;
 import com.project.ecommerce.entities.Product;
 import com.project.ecommerce.exeptions.APIException;
@@ -100,5 +101,22 @@ public class CategoryService implements ICategoryService{
 		categoryRepository.delete(category);
 
 		return "Category with categoryId: " + categoryId + " deleted successfully !!!";
+	}
+
+	@Override
+	public List<ProductDTO> getProductByCategory(Long categoryId) {
+		Category category = categoryRepository.findById(categoryId)
+				.orElseThrow(() -> new ResourceNotFoundException("Category", "categoryId", categoryId));
+		
+		List<Product> products = category.getProducts();
+
+		if (products.size() == 0) {
+			throw new APIException(category.getName() + " category doesn't contain any products !!!");
+		}
+
+		List<ProductDTO> productDTOs = products.stream().map(p -> modelMapper.map(p, ProductDTO.class))
+				.collect(Collectors.toList());
+
+		return productDTOs;
 	}
 }

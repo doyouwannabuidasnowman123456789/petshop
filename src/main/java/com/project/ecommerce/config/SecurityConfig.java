@@ -63,7 +63,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/test/**").permitAll()
                         // Category
                         .requestMatchers(HttpMethod.POST, "/api/category").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/api/category").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers(HttpMethod.GET, "/api/category/**").hasAnyRole("ADMIN", "USER")
                         .requestMatchers(HttpMethod.PUT, "/api/category/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/category/**").hasRole("ADMIN")
                         // Special Category
@@ -72,7 +72,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PUT, "/api/special-category/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/special-category/**").hasRole("ADMIN")
                         // Product
-                        // .requestMatchers(HttpMethod.POST, "/api/product").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/product").hasRole("ADMIN")
                         // .requestMatchers(HttpMethod.GET, "/api/product").hasAnyRole("ADMIN", "USER")
                         // .requestMatchers(HttpMethod.PUT, "/api/product/**").hasRole("ADMIN")
                         // .requestMatchers(HttpMethod.DELETE, "/api/product/**").hasRole("ADMIN")

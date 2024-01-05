@@ -1,5 +1,7 @@
 package com.project.ecommerce.dto;
 
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,11 +11,19 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ProductDTO {
     private Long id;
-	private String name;
-	private String image;
+	private Long categoryId;
+	private Long specialCategoryId;
+	private String petType;
+	private String brand;
+	private String title;
+	private String sku;
+	private Integer rating;
 	private String description;
-	private Integer quantity;
 	private double price;
-	private double discount;
-	private double rating;
+	private Integer quantity;
+	private float discount;
+	private double specialPrice;
+	private Integer viewNumber;
+	private Integer buyNumber;
+	private List<String> images;
 }
