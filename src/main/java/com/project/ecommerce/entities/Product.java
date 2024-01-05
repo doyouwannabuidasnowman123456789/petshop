@@ -15,7 +15,10 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -54,33 +57,35 @@ public class Product {
     @Nullable
     private String sku;
 
-    @NotBlank
-    @Size(min = 0, max = 5, message = "Rating value must be between 0 and 5")
+    @NotNull
+    @Min(value = 0, message = "Rating value must be greater than 0")
+    @Max(value = 5, message = "Rating value must be less than 5")
     @Column(nullable = false)
-    private Integer rating;
+    private Integer rating = 5;
 
     @NotBlank
     @Size(min = 6, max = 255, message = "Product description must between 6 and 255 characters length")
     @Column(nullable = false)
     private String description;
 
-    @NotBlank
-    @Size(min = 0, message = "Price must be greater than 0")
+    @NotNull
+    @Min(value = 0, message = "Price must be greater than 0")
     @Column(nullable = false)
     private double price;
 
-    @NotBlank
-    @Size(min = 0, message = "Product quantity must be greater than 0")
+    @NotNull
+    @Min(value = 0, message = "Product quantity must be greater than 0")
     @Column(nullable = false)
-    private Integer quantity;
+    private Integer quantity = 0;
     
-    @NotBlank
-    @Size(min = 0, max = 100, message = "Product discount must be between 0 and 100")
+    @NotNull
+    @Min(value = 0, message = "Product discount must be greater than 0 ")
+    @Max(value = 100, message = "Product discount must be less than 100")
     @Column(nullable = false)
     private float discount;
     
     @Nullable
-    @Size(min = 0, message = "Special Price must be greater than 0")
+    @Min(value = 0, message = "Special Price must be greater than 0")
     @Column(nullable = true, name = "special_price")
     private double specialPrice;
 
