@@ -61,8 +61,21 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/test/**").permitAll()
+                        // Category
                         .requestMatchers(HttpMethod.POST, "/api/category").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/api/category").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers(HttpMethod.PUT, "/api/category/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/category/**").hasRole("ADMIN")
+                        // Special Category
+                        .requestMatchers(HttpMethod.POST, "/api/special-category").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/special-category").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers(HttpMethod.PUT, "/api/special-category/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/special-category/**").hasRole("ADMIN")
+                        // Product
+                        // .requestMatchers(HttpMethod.POST, "/api/product").hasRole("ADMIN")
+                        // .requestMatchers(HttpMethod.GET, "/api/product").hasAnyRole("ADMIN", "USER")
+                        // .requestMatchers(HttpMethod.PUT, "/api/product/**").hasRole("ADMIN")
+                        // .requestMatchers(HttpMethod.DELETE, "/api/product/**").hasRole("ADMIN")
                         .anyRequest().authenticated());
 
         http.authenticationProvider(authenticationProvider());

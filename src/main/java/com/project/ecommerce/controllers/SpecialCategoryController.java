@@ -2,34 +2,34 @@ package com.project.ecommerce.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.project.ecommerce.dto.CategoryDTO;
 import com.project.ecommerce.dto.CategoryRequestDTO;
 import com.project.ecommerce.dto.CategoryResponseDTO;
 import com.project.ecommerce.dto.SuccessResponseDTO;
-import com.project.ecommerce.entities.Category;
-import com.project.ecommerce.services.CategoryService;
+import com.project.ecommerce.entities.SpecialCategory;
+import com.project.ecommerce.services.SpecialCategoryService;
 
 import jakarta.validation.Valid;
 
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
 @RestController
-@RequestMapping("/api/category")
-public class CategoryController {
+@RequestMapping("/api/special-category")
+public class SpecialCategoryController {
     @Autowired
-    private CategoryService categoryService;
+    private SpecialCategoryService categoryService;
 
     @PostMapping("")
     public ResponseEntity<CategoryDTO> createCategory(@Valid @RequestBody CategoryRequestDTO body) {
-        Category category = new Category();
+        SpecialCategory category = new SpecialCategory();
         category.setName(body.getName());
         
         CategoryDTO categoryDTO = categoryService.createCategory(category);
@@ -47,7 +47,7 @@ public class CategoryController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CategoryDTO> updateCategory(@RequestBody Category body, @PathVariable Long id) {
+    public ResponseEntity<CategoryDTO> updateCategory(@RequestBody SpecialCategory body, @PathVariable Long id) {
         CategoryDTO categoryDTO = categoryService.updateCategory(body, id);
 
         return ResponseEntity.ok(categoryDTO);
