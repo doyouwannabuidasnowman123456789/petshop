@@ -1,45 +1,46 @@
-// package com.project.ecommerce.services;
+package com.project.ecommerce.services;
 
-// import java.io.IOException;
-// import java.util.List;
-// import java.util.stream.Collectors;
+import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
 
-// import org.modelmapper.ModelMapper;
-// import org.springframework.beans.factory.annotation.Autowired;
-// import org.springframework.beans.factory.annotation.Value;
-// import org.springframework.data.domain.Page;
-// import org.springframework.data.domain.PageRequest;
-// import org.springframework.data.domain.Pageable;
-// import org.springframework.data.domain.Sort;
-// import org.springframework.stereotype.Service;
-// import org.springframework.web.multipart.MultipartFile;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
-// import com.project.ecommerce.dto.ProductDTO;
-// import com.project.ecommerce.dto.ProductResponseDTO;
-// import com.project.ecommerce.entities.Category;
-// import com.project.ecommerce.entities.Product;
-// import com.project.ecommerce.exeptions.APIException;
-// import com.project.ecommerce.exeptions.ResourceNotFoundException;
-// import com.project.ecommerce.repositories.CategoryRepository;
-// import com.project.ecommerce.repositories.ProductRepository;
+import com.project.ecommerce.dto.ProductDTO;
+import com.project.ecommerce.dto.ProductResponseDTO;
+import com.project.ecommerce.entities.Cart;
+import com.project.ecommerce.entities.Category;
+import com.project.ecommerce.entities.Product;
+import com.project.ecommerce.exeptions.APIException;
+import com.project.ecommerce.exeptions.ResourceNotFoundException;
+import com.project.ecommerce.repositories.CategoryRepository;
+import com.project.ecommerce.repositories.ProductRepository;
 
-// import jakarta.transaction.Transactional;
+import jakarta.transaction.Transactional;
 
-// @Transactional
-// @Service
-// public class ProductService implements IProductService{
+@Transactional
+@Service
+public class ProductService implements IProductService{
 
-//     @Autowired
-//     private CategoryRepository categoryRepository;
+    @Autowired
+    private CategoryRepository categoryRepository;
 
-//     @Autowired
-//     private ProductRepository productRepository;
+    @Autowired
+    private ProductRepository productRepository;
 
-//     @Autowired
-// 	private FileService fileService;
+    @Autowired
+	private FileService fileService;
 
-// 	@Autowired
-// 	private ModelMapper modelMapper;
+	@Autowired
+	private ModelMapper modelMapper;
 
 //     @Value("${project.image}")
 // 	private String path;
@@ -141,6 +142,18 @@
 //         return null;
 //     }
 
+        @Override
+        public ProductDTO updateProductWhenRemoveSpecialCategory(Long productId) {
+            Product product = productRepository.findById(productId)
+                    .orElseThrow(() -> new ResourceNotFoundException("Product", "productId", productId));
+    
+            product.setSpecialCategory(null);
+    
+            Product savedProduct = productRepository.save(product);
+    
+            return modelMapper.map(savedProduct, ProductDTO.class);
+        }
+
 //     @Override
 //     public ProductDTO updateProductImage(Long productId, MultipartFile image) throws IOException {
 //         return null;
@@ -177,9 +190,15 @@
 // 		return productResponse;
 //     }
 
-//     @Override
-//     public String deleteProduct(Long productId) {
-//         return null;
-//     }
-    
-// }
+    @Override
+    public String deleteProduct(Long productId) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new ResourceNotFoundException("Product", "productId", productId));
+
+        // List<Cart> carts = cartRepo.findCartsByProductId(productId);
+
+		// carts.forEach(cart -> cartService.deleteProductFromCart(cart.getCartId(), productId));
+        productRepository.delete(product);
+        return "Product with productId: " + productId + " deleted successfully !!!";
+    }
+}

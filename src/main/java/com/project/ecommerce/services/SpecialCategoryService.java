@@ -15,15 +15,17 @@ import com.project.ecommerce.dto.CategoryDTO;
 import com.project.ecommerce.dto.CategoryResponseDTO;
 import com.project.ecommerce.entities.Category;
 import com.project.ecommerce.entities.Product;
+import com.project.ecommerce.entities.SpecialCategory;
 import com.project.ecommerce.exeptions.APIException;
 import com.project.ecommerce.exeptions.ResourceNotFoundException;
 import com.project.ecommerce.repositories.CategoryRepository;
+import com.project.ecommerce.repositories.SpecialCategoryRepository;
 
 @Service
-public class CategoryService implements ICategoryService{
+public class SpecialCategoryService implements ISpecialCategoryService {
 
     @Autowired
-	private CategoryRepository categoryRepository;
+	private SpecialCategoryRepository categoryRepository;
 	
 	@Autowired
 	private ProductService productService;
@@ -32,8 +34,8 @@ public class CategoryService implements ICategoryService{
 	private ModelMapper modelMapper;
 
 	@Override
-	public CategoryDTO createCategory(Category category) {
-		Category savedCategory = categoryRepository.findByName(category.getName());
+	public CategoryDTO createCategory(SpecialCategory category) {
+		SpecialCategory savedCategory = categoryRepository.findByName(category.getName());
 
 		if (savedCategory != null) {
 			throw new APIException("Category with the name '" + category.getName() + "' already exists !!!");
@@ -51,9 +53,9 @@ public class CategoryService implements ICategoryService{
 
 		Pageable pageDetails = PageRequest.of(pageNumber, pageSize, sortByAndOrder);
 		
-		Page<Category> pageCategories = categoryRepository.findAll(pageDetails);
+		Page<SpecialCategory> pageCategories = categoryRepository.findAll(pageDetails);
 
-		List<Category> categories = pageCategories.getContent();
+		List<SpecialCategory> categories = pageCategories.getContent();
 
 		if (categories.size() == 0) {
 			throw new APIException("No category is created till now");
@@ -75,8 +77,8 @@ public class CategoryService implements ICategoryService{
 	}
 
 	@Override
-	public CategoryDTO updateCategory(Category category, Long categoryId) {
-		Category savedCategory = categoryRepository.findById(categoryId)
+	public CategoryDTO updateCategory(SpecialCategory category, Long categoryId) {
+		SpecialCategory savedCategory = categoryRepository.findById(categoryId)
 				.orElseThrow(() -> new ResourceNotFoundException("Category", "categoryId", categoryId));
 
 		category.setId(categoryId);
@@ -88,17 +90,18 @@ public class CategoryService implements ICategoryService{
 
 	@Override
 	public String deleteCategory(Long categoryId) {
-		Category category = categoryRepository.findById(categoryId)
+		SpecialCategory category = categoryRepository.findById(categoryId)
 				.orElseThrow(() -> new ResourceNotFoundException("Category", "categoryId", categoryId));
 		
 		List<Product> products = category.getProducts();
 
 		products.forEach(product -> {
-			productService.deleteProduct(product.getId());
+			productService.updateProductWhenRemoveSpecialCategory(product.getId());
 		});
 		
 		categoryRepository.delete(category);
 
 		return "Category with categoryId: " + categoryId + " deleted successfully !!!";
 	}
+    
 }
