@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.project.ecommerce.dto.CategoryDTO;
 import com.project.ecommerce.dto.CategoryRequestDTO;
-import com.project.ecommerce.dto.CategoryResponseDTO;
+import com.project.ecommerce.dto.PaginationCategoryResponseDTO;
 import com.project.ecommerce.dto.SuccessResponseDTO;
 import com.project.ecommerce.entities.SpecialCategory;
 import com.project.ecommerce.services.SpecialCategoryService;
@@ -38,11 +38,11 @@ public class SpecialCategoryController {
     }
 
     @GetMapping("")
-    public ResponseEntity<CategoryResponseDTO> getMethodName(@RequestParam(name = "pageNumber", defaultValue = "0", required = false) Integer pageNumber,
+    public ResponseEntity<PaginationCategoryResponseDTO> getMethodName(@RequestParam(name = "pageNumber", defaultValue = "0", required = false) Integer pageNumber,
     @RequestParam(name = "pageSize", defaultValue = "5", required = false) Integer pageSize,
     @RequestParam(name = "sortBy", defaultValue = "id", required = false) String sortBy,
     @RequestParam(name = "sortOrder", defaultValue = "asc", required = false) String sortOrder) {
-        CategoryResponseDTO categoryResponseDTO = categoryService.getCategories(pageNumber, pageSize, sortBy, sortOrder);
+        PaginationCategoryResponseDTO categoryResponseDTO = categoryService.getCategories(pageNumber, pageSize, sortBy, sortOrder);
         return ResponseEntity.ok(categoryResponseDTO);
     }
 

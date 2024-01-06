@@ -12,7 +12,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.project.ecommerce.dto.CategoryDTO;
-import com.project.ecommerce.dto.CategoryResponseDTO;
+import com.project.ecommerce.dto.PaginationCategoryResponseDTO;
 import com.project.ecommerce.entities.Category;
 import com.project.ecommerce.entities.Product;
 import com.project.ecommerce.entities.SpecialCategory;
@@ -47,7 +47,7 @@ public class SpecialCategoryService implements ISpecialCategoryService {
 	}
 
 	@Override
-	public CategoryResponseDTO getCategories(Integer pageNumber, Integer pageSize, String sortBy, String sortOrder) {
+	public PaginationCategoryResponseDTO getCategories(Integer pageNumber, Integer pageSize, String sortBy, String sortOrder) {
 		Sort sortByAndOrder = sortOrder.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending()
 				: Sort.by(sortBy).descending();
 
@@ -64,7 +64,7 @@ public class SpecialCategoryService implements ISpecialCategoryService {
 		List<CategoryDTO> categoryDTOs = categories.stream()
 				.map(category -> modelMapper.map(category, CategoryDTO.class)).collect(Collectors.toList());
 
-		CategoryResponseDTO categoryResponse = new CategoryResponseDTO();
+		PaginationCategoryResponseDTO categoryResponse = new PaginationCategoryResponseDTO();
 		
 		categoryResponse.setData(categoryDTOs);
 		categoryResponse.setPageNumber(pageCategories.getNumber());
