@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.project.ecommerce.dto.CategoryDTO;
 import com.project.ecommerce.dto.PaginationCategoryResponseDTO;
-import com.project.ecommerce.dto.ProductDTO;
+import com.project.ecommerce.dto.PaginationProductResponseDTO;
 import com.project.ecommerce.entities.Category;
 
 public interface ICategoryService {
@@ -16,5 +16,5 @@ public interface ICategoryService {
 
 	String deleteCategory(Long categoryId);
 
-	List<ProductDTO> getProductsByCategory(Long categoryId, Integer pageNumber, Integer pageSize, String sortBy, String sortOrder);
+	PaginationProductResponseDTO getProductsByCategory(Long categoryId, Integer pageNumber, Integer pageSize, String sortBy, String sortOrder);
 }

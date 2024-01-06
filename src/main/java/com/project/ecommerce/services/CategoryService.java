@@ -13,12 +13,14 @@ import org.springframework.stereotype.Service;
 
 import com.project.ecommerce.dto.CategoryDTO;
 import com.project.ecommerce.dto.PaginationCategoryResponseDTO;
+import com.project.ecommerce.dto.PaginationProductResponseDTO;
 import com.project.ecommerce.dto.ProductDTO;
 import com.project.ecommerce.entities.Category;
 import com.project.ecommerce.entities.Product;
 import com.project.ecommerce.exeptions.APIException;
 import com.project.ecommerce.exeptions.ResourceNotFoundException;
 import com.project.ecommerce.repositories.CategoryRepository;
+import com.project.ecommerce.repositories.ProductRepository;
 
 @Service
 public class CategoryService implements ICategoryService{
@@ -28,6 +30,9 @@ public class CategoryService implements ICategoryService{
 	
 	@Autowired
 	private ProductService productService;
+
+	@Autowired
+	private ProductRepository productRepository;
 
 	@Autowired
 	private ModelMapper modelMapper;
@@ -104,19 +109,33 @@ public class CategoryService implements ICategoryService{
 	}
 
 	@Override
-	public List<ProductDTO> getProductsByCategory(Long categoryId) {
+	public PaginationProductResponseDTO getProductsByCategory(Long categoryId, Integer pageNumber, Integer pageSize, String sortBy, String sortOrder) {
 		Category category = categoryRepository.findById(categoryId)
 				.orElseThrow(() -> new ResourceNotFoundException("Category", "categoryId", categoryId));
 		
-		List<Product> products = category.getProducts();
+		Sort sortByAndOrder = sortOrder.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending()
+				: Sort.by(sortBy).descending();
 
-		if (products.size() == 0) {
+		Pageable pageDetails = PageRequest.of(pageNumber, pageSize, sortByAndOrder);
+		
+		Page<Product> products = productRepository.findByCategory(category, pageDetails);
+
+		if (products.getContent().size() == 0) {
 			throw new APIException(category.getName() + " category doesn't contain any products !!!");
 		}
 
-		List<ProductDTO> productDTOs = products.stream().map(p -> modelMapper.map(p, ProductDTO.class))
+		List<ProductDTO> productDTOs = products.getContent().stream().map(p -> modelMapper.map(p, ProductDTO.class))
 				.collect(Collectors.toList());
 
-		return productDTOs;
+		PaginationProductResponseDTO productResponse = new PaginationProductResponseDTO();
+
+		productResponse.setData(productDTOs);
+		productResponse.setPageNumber(products.getNumber());
+		productResponse.setPageSize(products.getSize());
+		productResponse.setTotalElements(products.getTotalElements());
+		productResponse.setTotalPages(products.getTotalPages());
+		productResponse.setLastPage(products.isLast());
+
+		return productResponse;
 	}
 }

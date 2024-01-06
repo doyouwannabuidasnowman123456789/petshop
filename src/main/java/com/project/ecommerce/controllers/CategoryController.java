@@ -12,7 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.project.ecommerce.dto.CategoryDTO;
 import com.project.ecommerce.dto.CategoryRequestDTO;
-import com.project.ecommerce.dto.CategoryResponseDTO;
+import com.project.ecommerce.dto.PaginationCategoryResponseDTO;
+import com.project.ecommerce.dto.PaginationProductResponseDTO;
 import com.project.ecommerce.dto.ProductDTO;
 import com.project.ecommerce.dto.SuccessResponseDTO;
 import com.project.ecommerce.entities.Category;
@@ -41,25 +42,25 @@ public class CategoryController {
     }
 
     @GetMapping("")
-    public ResponseEntity<CategoryResponseDTO> getCategories(
+    public ResponseEntity<PaginationCategoryResponseDTO> getCategories(
         @RequestParam(name = "pageNumber", defaultValue = "0", required = false) Integer pageNumber,
         @RequestParam(name = "pageSize", defaultValue = "5", required = false) Integer pageSize,
         @RequestParam(name = "sortBy", defaultValue = "id", required = false) String sortBy,
         @RequestParam(name = "sortOrder", defaultValue = "asc", required = false) String sortOrder
     ) {
-        CategoryResponseDTO categoryResponseDTO = categoryService.getCategories(pageNumber, pageSize, sortBy, sortOrder);
+        PaginationCategoryResponseDTO categoryResponseDTO = categoryService.getCategories(pageNumber, pageSize, sortBy, sortOrder);
         return ResponseEntity.ok(categoryResponseDTO);
     }
 
     @GetMapping("/{id}/products")
-    public ResponseEntity<List<ProductDTO>> getProductByCategory(
+    public ResponseEntity<PaginationProductResponseDTO> getProductByCategory(
         @PathVariable Long id,
         @RequestParam(name = "pageNumber", defaultValue = "0", required = false) Integer pageNumber,
 		@RequestParam(name = "pageSize", defaultValue = "5", required = false) Integer pageSize,
 		@RequestParam(name = "sortBy", defaultValue = "name", required = false) String sortBy,
 		@RequestParam(name = "sortOrder", defaultValue = "asc", required = false) String sortOrder
     ) {
-        List<ProductDTO> productDTOs = categoryService.getProductByCategory(id);
+        PaginationProductResponseDTO productDTOs = categoryService.getProductsByCategory(id, pageNumber, pageSize, sortBy, sortOrder);
         return ResponseEntity.ok(productDTOs);
     }
 
