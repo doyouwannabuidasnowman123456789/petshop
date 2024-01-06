@@ -12,7 +12,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.project.ecommerce.dto.CategoryDTO;
-import com.project.ecommerce.dto.CategoryResponseDTO;
+import com.project.ecommerce.dto.PaginationCategoryResponseDTO;
 import com.project.ecommerce.dto.ProductDTO;
 import com.project.ecommerce.entities.Category;
 import com.project.ecommerce.entities.Product;
@@ -46,7 +46,7 @@ public class CategoryService implements ICategoryService{
 	}
 
 	@Override
-	public CategoryResponseDTO getCategories(Integer pageNumber, Integer pageSize, String sortBy, String sortOrder) {
+	public PaginationCategoryResponseDTO getCategories(Integer pageNumber, Integer pageSize, String sortBy, String sortOrder) {
 		Sort sortByAndOrder = sortOrder.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending()
 				: Sort.by(sortBy).descending();
 
@@ -63,7 +63,7 @@ public class CategoryService implements ICategoryService{
 		List<CategoryDTO> categoryDTOs = categories.stream()
 				.map(category -> modelMapper.map(category, CategoryDTO.class)).collect(Collectors.toList());
 
-		CategoryResponseDTO categoryResponse = new CategoryResponseDTO();
+		PaginationCategoryResponseDTO categoryResponse = new PaginationCategoryResponseDTO();
 		
 		categoryResponse.setData(categoryDTOs);
 		categoryResponse.setPageNumber(pageCategories.getNumber());
@@ -104,7 +104,7 @@ public class CategoryService implements ICategoryService{
 	}
 
 	@Override
-	public List<ProductDTO> getProductByCategory(Long categoryId) {
+	public List<ProductDTO> getProductsByCategory(Long categoryId) {
 		Category category = categoryRepository.findById(categoryId)
 				.orElseThrow(() -> new ResourceNotFoundException("Category", "categoryId", categoryId));
 		

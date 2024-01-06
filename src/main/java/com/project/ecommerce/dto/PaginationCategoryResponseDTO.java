@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CategoryResponseDTO {
+public class PaginationCategoryResponseDTO {
     private List<CategoryDTO> data;
 	private Integer pageNumber;
 	private Integer pageSize;

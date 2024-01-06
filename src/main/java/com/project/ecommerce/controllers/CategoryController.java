@@ -41,16 +41,24 @@ public class CategoryController {
     }
 
     @GetMapping("")
-    public ResponseEntity<CategoryResponseDTO> getMethodName(@RequestParam(name = "pageNumber", defaultValue = "0", required = false) Integer pageNumber,
-    @RequestParam(name = "pageSize", defaultValue = "5", required = false) Integer pageSize,
-    @RequestParam(name = "sortBy", defaultValue = "id", required = false) String sortBy,
-    @RequestParam(name = "sortOrder", defaultValue = "asc", required = false) String sortOrder) {
+    public ResponseEntity<CategoryResponseDTO> getCategories(
+        @RequestParam(name = "pageNumber", defaultValue = "0", required = false) Integer pageNumber,
+        @RequestParam(name = "pageSize", defaultValue = "5", required = false) Integer pageSize,
+        @RequestParam(name = "sortBy", defaultValue = "id", required = false) String sortBy,
+        @RequestParam(name = "sortOrder", defaultValue = "asc", required = false) String sortOrder
+    ) {
         CategoryResponseDTO categoryResponseDTO = categoryService.getCategories(pageNumber, pageSize, sortBy, sortOrder);
         return ResponseEntity.ok(categoryResponseDTO);
     }
 
     @GetMapping("/{id}/products")
-    public ResponseEntity<List<ProductDTO>> getProductByCategory(@PathVariable Long id) {
+    public ResponseEntity<List<ProductDTO>> getProductByCategory(
+        @PathVariable Long id,
+        @RequestParam(name = "pageNumber", defaultValue = "0", required = false) Integer pageNumber,
+		@RequestParam(name = "pageSize", defaultValue = "5", required = false) Integer pageSize,
+		@RequestParam(name = "sortBy", defaultValue = "name", required = false) String sortBy,
+		@RequestParam(name = "sortOrder", defaultValue = "asc", required = false) String sortOrder
+    ) {
         List<ProductDTO> productDTOs = categoryService.getProductByCategory(id);
         return ResponseEntity.ok(productDTOs);
     }
