@@ -57,9 +57,10 @@ public class CategoryController {
         @PathVariable Long id,
         @RequestParam(name = "pageNumber", defaultValue = "0", required = false) Integer pageNumber,
 		@RequestParam(name = "pageSize", defaultValue = "5", required = false) Integer pageSize,
-		@RequestParam(name = "sortBy", defaultValue = "name", required = false) String sortBy,
+		@RequestParam(name = "sortBy", defaultValue = "title", required = false) String sortBy,
 		@RequestParam(name = "sortOrder", defaultValue = "asc", required = false) String sortOrder
     ) {
+        System.out.println(id);
         PaginationProductResponseDTO productDTOs = categoryService.getProductsByCategory(id, pageNumber, pageSize, sortBy, sortOrder);
         return ResponseEntity.ok(productDTOs);
     }

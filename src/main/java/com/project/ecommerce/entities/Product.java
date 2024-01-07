@@ -51,7 +51,7 @@ public class Product {
 
     @NotBlank
     @Size(min = 5, max = 100, message = "Product title must be between 5 and 100 characters length")
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String title;
 
     @Nullable
