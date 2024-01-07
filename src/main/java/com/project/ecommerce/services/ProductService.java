@@ -66,12 +66,13 @@ public class ProductService implements IProductService {
             }
         }
 
-        if (isProductNotPresent) {
-            ProductRequestDTO newProductRequestDTO = new ProductRequestDTO(productRequestDTO.getCategoryId(),
-                    productRequestDTO.getPetType(), productRequestDTO.getTitle(), productRequestDTO.getDescription(),
-                    productRequestDTO.getPrice());
-            
-            Product product = modelMapper.map(newProductRequestDTO, Product.class);
+        if (isProductNotPresent) {            
+            Product product = new Product(); // Create a new instance of Product
+            product.setCategory(category);
+            product.setPetType(productRequestDTO.getPetType());
+            product.setTitle(productRequestDTO.getTitle());
+            product.setDescription(productRequestDTO.getDescription());
+            product.setPrice(productRequestDTO.getPrice());
             product.setImages(new ArrayList<String>());
 
             for(MultipartFile image: productRequestDTO.getImages()) {
