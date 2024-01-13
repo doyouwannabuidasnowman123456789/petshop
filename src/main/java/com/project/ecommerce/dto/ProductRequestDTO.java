@@ -10,7 +10,6 @@ import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -62,6 +61,7 @@ public class ProductRequestDTO {
 
     private int buyNumber = 0;
 
+    @Nullable
     @Size(min = 3, max = 3, message = "Product images must be 3 images")
     private List<MultipartFile> images;
 

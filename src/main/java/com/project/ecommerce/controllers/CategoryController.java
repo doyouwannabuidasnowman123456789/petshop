@@ -1,7 +1,5 @@
 package com.project.ecommerce.controllers;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,7 +12,6 @@ import com.project.ecommerce.dto.CategoryDTO;
 import com.project.ecommerce.dto.CategoryRequestDTO;
 import com.project.ecommerce.dto.PaginationCategoryResponseDTO;
 import com.project.ecommerce.dto.PaginationProductResponseDTO;
-import com.project.ecommerce.dto.ProductDTO;
 import com.project.ecommerce.dto.SuccessResponseDTO;
 import com.project.ecommerce.entities.Category;
 import com.project.ecommerce.services.CategoryService;
