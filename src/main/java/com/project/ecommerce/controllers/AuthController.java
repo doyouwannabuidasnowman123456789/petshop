@@ -19,10 +19,12 @@ import com.project.ecommerce.dto.JwtResponseDTO;
 import com.project.ecommerce.dto.LoginRequestDTO;
 import com.project.ecommerce.dto.RegisterRequestDTO;
 import com.project.ecommerce.dto.SuccessResponseDTO;
+import com.project.ecommerce.entities.Cart;
 import com.project.ecommerce.entities.ERole;
 import com.project.ecommerce.entities.Role;
 import com.project.ecommerce.entities.User;
 import com.project.ecommerce.entities.UserDetailsImpl;
+import com.project.ecommerce.repositories.CartRepository;
 import com.project.ecommerce.repositories.RoleRepository;
 import com.project.ecommerce.repositories.UserRepository;
 import com.project.ecommerce.security.JwtUtil;
@@ -44,6 +46,9 @@ public class AuthController {
 
     @Autowired
     RoleRepository roleRepository;
+
+    @Autowired
+    CartRepository cartRepository;
 
     @Autowired
     PasswordEncoder encoder;
@@ -86,7 +91,7 @@ public class AuthController {
             registerRequest.getPhoneNumber(),
             registerRequest.getEmail(),
             encoder.encode(registerRequest.getPassword())
-            );
+        );
 
         Set<String> strRoles = registerRequest.getRole();
         Set<Role> roles = new HashSet<>();
@@ -119,7 +124,13 @@ public class AuthController {
         }
 
         user.setRoles(roles);
-        userRepository.save(user);
+
+        // Save cart
+        Cart cart = new Cart();
+        user.setCart(cart);
+        User savedUser = userRepository.save(user);
+        cart.setUser(savedUser);
+        cartRepository.save(cart);
 
         return ResponseEntity.ok(new SuccessResponseDTO("success", "User registered successfully!"));
     }

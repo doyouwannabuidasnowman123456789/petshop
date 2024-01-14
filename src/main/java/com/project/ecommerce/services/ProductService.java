@@ -18,11 +18,14 @@ import org.springframework.web.multipart.MultipartFile;
 import com.project.ecommerce.dto.ProductDTO;
 import com.project.ecommerce.dto.ProductRequestDTO;
 import com.project.ecommerce.dto.ProductResponseDTO;
+import com.project.ecommerce.dto.SuccessResponseDTO;
+import com.project.ecommerce.entities.Cart;
 import com.project.ecommerce.entities.Category;
 import com.project.ecommerce.entities.Product;
 import com.project.ecommerce.entities.SpecialCategory;
 import com.project.ecommerce.exeptions.APIException;
 import com.project.ecommerce.exeptions.ResourceNotFoundException;
+import com.project.ecommerce.repositories.CartRepository;
 import com.project.ecommerce.repositories.CategoryRepository;
 import com.project.ecommerce.repositories.ProductRepository;
 import com.project.ecommerce.repositories.SpecialCategoryRepository;
@@ -41,6 +44,12 @@ public class ProductService implements IProductService {
 
     @Autowired
     private ProductRepository productRepository;
+
+    @Autowired
+    private CartRepository cartRepository;
+
+    @Autowired
+    private CartService cartService;
 
     @Autowired
     private FileService fileService;
@@ -78,6 +87,9 @@ public class ProductService implements IProductService {
             product.setDescription(productRequestDTO.getDescription());
             product.setPrice(productRequestDTO.getPrice());
             product.setImages(new ArrayList<String>());
+
+            // Set discount and special price
+            product.setSpecialPrice(productRequestDTO.getPrice() - (productRequestDTO.getPrice() * productRequestDTO.getDiscount() / 100));
 
             for(MultipartFile image: productRequestDTO.getImages()) {
                 String imageName = fileService.uploadImage(path, image);
@@ -143,7 +155,7 @@ public class ProductService implements IProductService {
         productFromDatabase.setPrice(product.getPrice());
         productFromDatabase.setQuantity(product.getQuantity());
         productFromDatabase.setDiscount(product.getDiscount());
-        productFromDatabase.setSpecialPrice(product.getSpecialPrice());
+        productFromDatabase.setSpecialPrice(productFromDatabase.getPrice() - (productFromDatabase.getPrice() * productFromDatabase.getDiscount() / 100));
         productFromDatabase.setViewNumber(product.getViewNumber());
         productFromDatabase.setBuyNumber(product.getBuyNumber());
 
@@ -172,15 +184,15 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public String deleteProduct(Long productId) {
+    public SuccessResponseDTO deleteProduct(Long productId) {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new ResourceNotFoundException("Product", "productId", productId));
 
-        // List<Cart> carts = cartRepo.findCartsByProductId(productId);
+        List<Cart> carts = cartRepository.findCartsByProductId(productId);
 
-        // carts.forEach(cart -> cartService.deleteProductFromCart(cart.getCartId(),
-        // productId));
+        carts.forEach(cart -> cartService.deleteProductFromCart(cart.getCartId(),
+        productId));
         productRepository.delete(product);
-        return "Product with productId: " + productId + " deleted successfully !!!";
+        return new SuccessResponseDTO("success", "Product with productId: " + productId + " deleted successfully !!!");
     }
 }
