@@ -18,7 +18,6 @@ import com.project.ecommerce.dto.OrderDTO;
 import com.project.ecommerce.services.OrderService;
 
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Email;
 
 @RestController
 @RequestMapping("/api/orders")
