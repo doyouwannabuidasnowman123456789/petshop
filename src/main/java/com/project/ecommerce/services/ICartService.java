@@ -7,9 +7,9 @@ import com.project.ecommerce.dto.CartDTO;
 public interface ICartService {
     CartDTO addProductToCart(Long cartId, Long productId, Integer quantity);
 	
-	List<CartDTO> getAllCarts();
+	// List<CartDTO> getAllCarts();
 	
-	CartDTO getCart(String emailId, Long cartId);
+	CartDTO getCart(String emailId);
 	
 	CartDTO updateProductQuantityInCart(Long cartId, Long productId, Integer quantity);
 	

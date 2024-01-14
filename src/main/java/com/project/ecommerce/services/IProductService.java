@@ -5,6 +5,7 @@ import java.io.IOException;
 import com.project.ecommerce.dto.ProductDTO;
 import com.project.ecommerce.dto.ProductRequestDTO;
 import com.project.ecommerce.dto.ProductResponseDTO;
+import com.project.ecommerce.dto.SuccessResponseDTO;
 public interface IProductService {
     ProductDTO addProduct(ProductRequestDTO productRequestDTO) throws IOException;
 
@@ -22,5 +23,5 @@ public interface IProductService {
 	// ProductResponseDTO searchProductByKeyword(String keyword, Integer pageNumber, Integer pageSize, String sortBy,
 	// 		String sortOrder);
 
-	String deleteProduct(Long productId);
+	SuccessResponseDTO deleteProduct(Long productId);
 }
