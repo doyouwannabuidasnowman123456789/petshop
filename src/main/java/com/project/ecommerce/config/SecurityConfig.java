@@ -83,6 +83,10 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/cart/**").hasAnyRole("ADMIN", "USER")
                         .requestMatchers(HttpMethod.GET, "/api/cart/**").hasAnyRole("ADMIN", "USER")
                         .requestMatchers(HttpMethod.GET, "/api/cart").hasAnyRole("ADMIN", "USER")
+                        // Order
+                        .requestMatchers(HttpMethod.GET, "/api/orders").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers(HttpMethod.GET, "/api/orders/**").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers(HttpMethod.POST, "/api/orders").hasAnyRole("ADMIN", "USER")
                         .anyRequest().authenticated());
 
         http.authenticationProvider(authenticationProvider());

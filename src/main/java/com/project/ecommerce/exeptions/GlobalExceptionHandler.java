@@ -3,6 +3,7 @@ package com.project.ecommerce.exeptions;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -38,4 +39,10 @@ public class GlobalExceptionHandler {
 
 		return new ResponseEntity<ExceptionResponseDTO>(res, HttpStatus.BAD_REQUEST);
 	}
+
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public ExceptionResponseDTO missingServletRequestParamException(MissingServletRequestParameterException e) {
+        String errorMessage = e.getMessage();
+        return new ExceptionResponseDTO("error", errorMessage);
+    }
 }

@@ -83,9 +83,16 @@ public class ProductService implements IProductService {
             Product product = new Product(); // Create a new instance of Product
             product.setCategory(category);
             product.setPetType(productRequestDTO.getPetType());
+            product.setBrand(productRequestDTO.getBrand());
             product.setTitle(productRequestDTO.getTitle());
+            product.setSku(productRequestDTO.getSku());
+            product.setRating(productRequestDTO.getRating());
             product.setDescription(productRequestDTO.getDescription());
             product.setPrice(productRequestDTO.getPrice());
+            product.setQuantity(productRequestDTO.getQuantity());
+            product.setDiscount(productRequestDTO.getDiscount());
+            product.setViewNumber(productRequestDTO.getViewNumber());
+            product.setBuyNumber(productRequestDTO.getBuyNumber());
             product.setImages(new ArrayList<String>());
 
             // Set discount and special price
