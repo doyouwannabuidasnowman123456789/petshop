@@ -93,10 +93,12 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/test/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/category/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "api/product/images/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/product").permitAll()
                         // Category
                         .requestMatchers(HttpMethod.POST, "/api/category").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/api/category/**").hasAnyRole("ADMIN", "USER")
+                        // .requestMatchers(HttpMethod.GET, "/api/category/**").hasAnyRole("ADMIN", "USER")
                         .requestMatchers(HttpMethod.PUT, "/api/category/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/category/**").hasRole("ADMIN")
                         // Special Category

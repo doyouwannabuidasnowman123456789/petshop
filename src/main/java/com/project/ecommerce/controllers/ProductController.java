@@ -1,8 +1,13 @@
 package com.project.ecommerce.controllers;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -68,5 +73,31 @@ public class ProductController {
     ) {
         SuccessResponseDTO successResponseDTO = productService.deleteProduct(id);
         return ResponseEntity.ok(successResponseDTO);
+    }
+
+    @GetMapping("/images/{imageName}")
+    public ResponseEntity<byte[]> getImage(@PathVariable String imageName) throws IOException {
+        // Load the image from the classpath resources
+        Resource resource = new ClassPathResource("images/" + imageName);
+
+        // Read the image bytes
+        byte[] imageBytes = Files.readAllBytes(Path.of(resource.getURI()));
+
+        // Return the image bytes and set the content type
+        MediaType contentType = getMediaType(imageName);
+
+        // Return the image bytes and set the content type
+        return ResponseEntity.ok().contentType(contentType).body(imageBytes);
+    }
+
+    private MediaType getMediaType(String imageName) {
+        if (imageName.toLowerCase().endsWith(".png")) {
+            return MediaType.IMAGE_PNG;
+        } else if (imageName.toLowerCase().endsWith(".jpg") || imageName.toLowerCase().endsWith(".jpeg")) {
+            return MediaType.IMAGE_JPEG;
+        } else {
+            // Default to a generic binary content type if the file extension is unknown
+            return MediaType.APPLICATION_OCTET_STREAM;
+        }
     }
 }
