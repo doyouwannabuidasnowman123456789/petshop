@@ -45,6 +45,14 @@ public class ProductController {
         return ResponseEntity.ok(productResponseDTO);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<ProductDTO> getProductById(
+        @PathVariable Long id
+    ) {
+        ProductDTO productDTO = productService.getProductById(id);
+        return ResponseEntity.ok(productDTO);
+    }
+
     @PostMapping("")
     public ResponseEntity<ProductDTO> addProduct(
         @Valid 

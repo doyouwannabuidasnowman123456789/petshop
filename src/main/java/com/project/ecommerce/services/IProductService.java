@@ -11,6 +11,8 @@ public interface IProductService {
 
 	ProductResponseDTO getAllProducts(Integer pageNumber, Integer pageSize, String sortBy, String sortOrder);
 
+	ProductDTO getProductById(Long id);
+
 	// ProductResponseDTO searchByCategory(Long categoryId, Integer pageNumber, Integer pageSize, String sortBy,
 	// 		String sortOrder);
 

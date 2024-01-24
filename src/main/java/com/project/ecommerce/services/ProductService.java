@@ -112,6 +112,14 @@ public class ProductService implements IProductService {
     }
 
     @Override
+    public ProductDTO getProductById(Long id) {
+        Product productById = productRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Product", "productId", id));
+        ProductDTO productDTO = modelMapper.map(productById, ProductDTO.class);
+        return productDTO;
+    }
+
+    @Override
     public ProductResponseDTO getAllProducts(Integer pageNumber, Integer
     pageSize, String sortBy, String sortOrder) {
     Sort sortByAndOrder = sortOrder.equalsIgnoreCase("asc") ?
