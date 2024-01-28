@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import com.project.ecommerce.dto.CartDTO;
 import com.project.ecommerce.dto.CartItemDTO;
-import com.project.ecommerce.dto.ProductDTO;
 import com.project.ecommerce.dto.SuccessResponseDTO;
 import com.project.ecommerce.entities.Cart;
 import com.project.ecommerce.entities.CartItem;
@@ -68,6 +67,7 @@ public class CartService implements ICartItemService{
 		newCartItem.setQuantity(quantity);
         newCartItem.setDiscount(product.getDiscount());
         newCartItem.setProductPrice(product.getSpecialPrice());
+		newCartItem.setImage(product.getImages().get(0));
 
 		cartItemRepository.save(newCartItem);
 

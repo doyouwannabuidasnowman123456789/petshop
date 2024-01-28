@@ -121,6 +121,9 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/orders").hasAnyRole("ADMIN", "USER")
                         .requestMatchers(HttpMethod.GET, "/api/orders/**").hasAnyRole("ADMIN", "USER")
                         .requestMatchers(HttpMethod.POST, "/api/orders").hasAnyRole("ADMIN", "USER")
+                        // Examination Booking
+                        .requestMatchers(HttpMethod.GET, "/api/examination-bookings").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers(HttpMethod.POST, "/api/examination-bookings").hasAnyRole("ADMIN", "USER")
                         .anyRequest().authenticated());
 
         

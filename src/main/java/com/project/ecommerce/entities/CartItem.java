@@ -33,4 +33,5 @@ public class CartItem {
 	private Integer quantity;
 	private float discount;
 	private double productPrice;
+	private String image;
 }

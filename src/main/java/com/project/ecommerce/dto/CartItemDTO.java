@@ -1,8 +1,5 @@
 package com.project.ecommerce.dto;
 
-import com.project.ecommerce.entities.Cart;
-import com.project.ecommerce.entities.Product;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,4 +14,5 @@ public class CartItemDTO {
     private Integer quantity;
     private float discount;
     private double productSpecialPrice;
+    private String image;
 }
