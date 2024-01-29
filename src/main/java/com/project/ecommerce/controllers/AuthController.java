@@ -3,6 +3,7 @@ package com.project.ecommerce.controllers;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.project.ecommerce.dto.ExceptionResponseDTO;
+import com.project.ecommerce.dto.ForgotPasswordRequestDTO;
 import com.project.ecommerce.dto.JwtResponseDTO;
 import com.project.ecommerce.dto.LoginRequestDTO;
 import com.project.ecommerce.dto.RegisterRequestDTO;
@@ -24,10 +26,12 @@ import com.project.ecommerce.entities.ERole;
 import com.project.ecommerce.entities.Role;
 import com.project.ecommerce.entities.User;
 import com.project.ecommerce.entities.UserDetailsImpl;
+import com.project.ecommerce.exeptions.APIException;
 import com.project.ecommerce.repositories.CartRepository;
 import com.project.ecommerce.repositories.RoleRepository;
 import com.project.ecommerce.repositories.UserRepository;
 import com.project.ecommerce.security.JwtUtil;
+import com.project.ecommerce.services.EmailSenderService;
 
 import jakarta.validation.Valid;
 
@@ -49,6 +53,9 @@ public class AuthController {
 
     @Autowired
     CartRepository cartRepository;
+
+    @Autowired
+    private EmailSenderService emailSenderService;
 
     @Autowired
     PasswordEncoder encoder;
@@ -133,5 +140,18 @@ public class AuthController {
         cartRepository.save(cart);
 
         return ResponseEntity.ok(new SuccessResponseDTO("success", "User registered successfully!"));
+    }
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<?> sendNewPassword(@Valid @RequestBody ForgotPasswordRequestDTO forgotPasswordRequestDTO) throws APIException{
+        User user = userRepository.findByEmail(forgotPasswordRequestDTO.getEmail()).orElse(null);
+        if(user == null) throw new APIException("User not found");
+        String newPassword = UUID.randomUUID().toString().substring(0, 8);
+
+        user.setPassword(encoder.encode(newPassword));
+        userRepository.save(user);
+        String emailSender = emailSenderService.sendEmail(forgotPasswordRequestDTO.getEmail(), "New password", newPassword);
+
+        return ResponseEntity.ok(new SuccessResponseDTO("success", emailSender));
     }
 }
