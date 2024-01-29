@@ -125,6 +125,12 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/examination-bookings").hasAnyRole("ADMIN", "USER")
                         .requestMatchers(HttpMethod.POST, "/api/examination-bookings").hasAnyRole("ADMIN", "USER")
                         .requestMatchers(HttpMethod.DELETE, "/api/examination-bookings/**").hasAnyRole("ADMIN", "USER")
+                        // Take Care Booking
+                        .requestMatchers(HttpMethod.GET, "/api/take-care-bookings/**").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers(HttpMethod.POST, "/api/take-care-bookings").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers(HttpMethod.DELETE, "/api/take-care-bookings/**").hasAnyRole("ADMIN", "USER")
+                        // User
+                        .requestMatchers(HttpMethod.GET, "/api/users/**").hasAnyRole("ADMIN", "USER")
                         .anyRequest().authenticated());
 
         

@@ -12,11 +12,16 @@ import org.springframework.context.annotation.Bean;
 import com.project.ecommerce.entities.ERole;
 import com.project.ecommerce.entities.Role;
 import com.project.ecommerce.repositories.RoleRepository;
+import com.project.ecommerce.services.EmailSenderService;
 
 @SpringBootApplication
 public class EcommerceApplication implements CommandLineRunner{
 	@Autowired
 	private RoleRepository roleRepository;
+
+	@Autowired
+    private EmailSenderService emailSenderService;
+	
 	public static void main(String[] args) {
 		SpringApplication.run(EcommerceApplication.class, args);
 	}
