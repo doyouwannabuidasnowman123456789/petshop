@@ -8,4 +8,5 @@ import com.project.ecommerce.dto.ExaminationBookingDTO;
 public interface IExaminationBookingService {
     ExaminationBookingDTO createExaminationBooking(CreateExaminationBookingRequestDTO examinationBookingRequestDTO);
     List<ExaminationBookingDTO> getAllExaminationBookings(String email);
+    String deleteExaminationById(Long id);
 }

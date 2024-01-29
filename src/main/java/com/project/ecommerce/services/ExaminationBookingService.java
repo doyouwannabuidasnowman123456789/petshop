@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import com.project.ecommerce.dto.CreateExaminationBookingRequestDTO;
 import com.project.ecommerce.dto.ExaminationBookingDTO;
-import com.project.ecommerce.dto.OrderDTO;
 import com.project.ecommerce.entities.ExaminationBooking;
 import com.project.ecommerce.exeptions.APIException;
 import com.project.ecommerce.repositories.ExaminationBookingRepository;
@@ -46,5 +45,12 @@ public class ExaminationBookingService implements IExaminationBookingService{
             throw new APIException("No examination bookings found for this email: " + email);
         }
         return examinationBookingDTOs;
+    }
+
+    @Override
+    public String deleteExaminationById(Long id) {
+        ExaminationBooking examinationBooking = examinationBookingRepository.findById(id).orElseThrow(() -> new APIException("No examination booking found with id: " + id));
+        examinationBookingRepository.deleteById(id);
+        return "Examination booking with id: " + id + " has been deleted";
     }
 }

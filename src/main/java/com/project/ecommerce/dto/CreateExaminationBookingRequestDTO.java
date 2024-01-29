@@ -19,7 +19,7 @@ public class CreateExaminationBookingRequestDTO {
     @Email()
     private String email;
 
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     @Future(message = "Date must be in the future")
     private Date date;
 
