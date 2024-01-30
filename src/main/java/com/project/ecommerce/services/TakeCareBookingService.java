@@ -55,6 +55,7 @@ public class TakeCareBookingService implements ITakeCareBookingService{
         long numberDay = createTakeCareBookingRequestDTO.getNumberOfDays();
         takeCareBooking.setPrice(price * numberDay);
         takeCareBooking.setNote(createTakeCareBookingRequestDTO.getNote());
+        takeCareBooking.setStatus(false);
 
         takeCareBookingRepository.save(takeCareBooking);
 
@@ -68,5 +69,13 @@ public class TakeCareBookingService implements ITakeCareBookingService{
 
         takeCareBookingRepository.delete(takeCareBooking);
         return "Take care booking " + id + " deleted successfully";
+    }
+
+    @Override
+    public List<TakeCareBookingDTO> getAllTakeCareBookings() {
+        List<TakeCareBooking> takeCareBookings = takeCareBookingRepository.findAll();
+
+        List<TakeCareBookingDTO> takeCareBookingDTOs = takeCareBookings.stream().map(takeCareBooking -> modelMapper.map(takeCareBooking, TakeCareBookingDTO.class)).collect(Collectors.toList());
+        return takeCareBookingDTOs;
     }
 }

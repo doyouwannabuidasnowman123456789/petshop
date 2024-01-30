@@ -41,23 +41,24 @@ public class TakeCareBookingController {
         return ResponseEntity.ok(takeCareBookingDTO);
     }
 
+    @GetMapping("/all")
+    public ResponseEntity<?> getAllBookings() {
+        
+        List<TakeCareBookingDTO> takeCareBookingDTOs = takeCareBookingService.getAllTakeCareBookings();
+        return ResponseEntity.ok(takeCareBookingDTOs);
+}
+    
+
     @GetMapping("")
-    public ResponseEntity<?> getAllTakeCareBookingsByEmail(@RequestParam(name = "email") String email) {
-        if (email == null) {
-            return ResponseEntity.badRequest().body("Email is required");
-        }else {
+    public ResponseEntity<?> getAllTakeCareBookingsByEmail(@RequestParam(name = "email", required = true) String email) {
+        
             List<TakeCareBookingDTO> takeCareBookingDTOs = takeCareBookingService.getAllTakeCareBookingsByEmail(email);
             return ResponseEntity.ok(takeCareBookingDTOs);
-        }
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteTakeCareBookingById(@PathVariable("id") Long id) {
 
         return ResponseEntity.ok(new SuccessResponseDTO("success", takeCareBookingService.deleteTakeCareBookingById(id)));
-    }
-
-    public ResponseEntity<?> getAllBookings() {
-        return null;
     }
 }

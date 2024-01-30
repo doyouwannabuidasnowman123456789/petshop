@@ -14,4 +14,5 @@ public class ExaminationBookingDTO {
     private String email;
     private Date date;
     private String description;
+    private Boolean status;
 }

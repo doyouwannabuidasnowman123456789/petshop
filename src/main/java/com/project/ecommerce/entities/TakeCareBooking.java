@@ -2,6 +2,7 @@ package com.project.ecommerce.entities;
 
 import java.util.Date;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -34,4 +35,7 @@ public class TakeCareBooking {
     
     private Double price;
     private String note;
+
+    @Column(nullable = true, columnDefinition = "boolean default false")
+    private Boolean status;
 }

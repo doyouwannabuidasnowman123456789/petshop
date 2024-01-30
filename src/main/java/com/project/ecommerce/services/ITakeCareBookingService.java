@@ -9,4 +9,5 @@ public interface ITakeCareBookingService {
     List<TakeCareBookingDTO> getAllTakeCareBookingsByEmail(String email);
     TakeCareBookingDTO createTakeCareBooking(CreateTakeCareBookingRequestDTO createTakeCareBookingRequestDTO);
     String deleteTakeCareBookingById(Long id);
+    List<TakeCareBookingDTO> getAllTakeCareBookings();
 }

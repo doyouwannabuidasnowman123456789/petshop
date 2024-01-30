@@ -9,4 +9,5 @@ public interface IExaminationBookingService {
     ExaminationBookingDTO createExaminationBooking(CreateExaminationBookingRequestDTO examinationBookingRequestDTO);
     List<ExaminationBookingDTO> getAllExaminationBookings(String email);
     String deleteExaminationById(Long id);
+    List<ExaminationBookingDTO> getAllExaminationBooking();
 }

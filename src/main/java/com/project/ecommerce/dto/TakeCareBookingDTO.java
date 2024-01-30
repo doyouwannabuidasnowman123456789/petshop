@@ -17,4 +17,5 @@ public class TakeCareBookingDTO {
     private String petType;
     private Double price;
     private String note;
+    private Boolean status;
 }

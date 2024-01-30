@@ -123,10 +123,12 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/orders").hasAnyRole("ADMIN", "USER")
                         // Examination Booking
                         .requestMatchers(HttpMethod.GET, "/api/examination-bookings").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers(HttpMethod.GET, "/api/examination-bookings/all").hasAnyRole("ADMIN")
                         .requestMatchers(HttpMethod.POST, "/api/examination-bookings").hasAnyRole("ADMIN", "USER")
                         .requestMatchers(HttpMethod.DELETE, "/api/examination-bookings/**").hasAnyRole("ADMIN", "USER")
                         // Take Care Booking
-                        .requestMatchers(HttpMethod.GET, "/api/take-care-bookings/**").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers(HttpMethod.GET, "/api/take-care-bookings").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers(HttpMethod.GET, "/api/take-care-bookings/all").hasAnyRole("ADMIN")
                         .requestMatchers(HttpMethod.POST, "/api/take-care-bookings").hasAnyRole("ADMIN", "USER")
                         .requestMatchers(HttpMethod.DELETE, "/api/take-care-bookings/**").hasAnyRole("ADMIN", "USER")
                         // User

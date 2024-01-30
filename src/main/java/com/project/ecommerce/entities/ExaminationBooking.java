@@ -2,6 +2,7 @@ package com.project.ecommerce.entities;
 
 import java.util.Date;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -25,4 +26,7 @@ public class ExaminationBooking {
     private String email;
     private Date date;
     private String description;
+
+    @Column(nullable = true, columnDefinition = "boolean default false")
+    private Boolean status;
 }

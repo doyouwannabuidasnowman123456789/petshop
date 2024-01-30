@@ -28,6 +28,7 @@ public class ExaminationBookingService implements IExaminationBookingService{
         examinationBooking.setEmail(examinationBookingRequestDTO.getEmail());
         examinationBooking.setDate(examinationBookingRequestDTO.getDate());
         examinationBooking.setDescription(examinationBookingRequestDTO.getDescription());
+        examinationBooking.setStatus(false);
         examinationBookingRepository.save(examinationBooking);
 
         ExaminationBookingDTO examinationBookingDTO = modelMapper.map(examinationBooking, ExaminationBookingDTO.class);
@@ -52,5 +53,13 @@ public class ExaminationBookingService implements IExaminationBookingService{
         ExaminationBooking examinationBooking = examinationBookingRepository.findById(id).orElseThrow(() -> new APIException("No examination booking found with id: " + id));
         examinationBookingRepository.deleteById(id);
         return "Examination booking with id: " + id + " has been deleted";
+    }
+
+    @Override
+    public List<ExaminationBookingDTO> getAllExaminationBooking() {
+        List<ExaminationBooking> examinationBookings = examinationBookingRepository.findAll();
+
+        List<ExaminationBookingDTO> examinationBookingDTOs = examinationBookings.stream().map(examinationBooking -> modelMapper.map(examinationBooking, ExaminationBookingDTO.class)).collect(Collectors.toList());
+        return examinationBookingDTOs;
     }
 }
