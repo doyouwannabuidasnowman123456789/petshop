@@ -2,13 +2,14 @@ package com.project.ecommerce.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.project.ecommerce.dto.CartDTO;
@@ -22,10 +23,9 @@ public class CartController {
     private CartService cartService;
 
     @GetMapping("")
-    public ResponseEntity<CartDTO> getCart(
-        @RequestParam(name = "email", required = true) String email
-    ) {
-        CartDTO cartDTO = cartService.getCart(email);
+    public ResponseEntity<CartDTO> getCart() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        CartDTO cartDTO = cartService.getCart(authentication.getName());
         return ResponseEntity.ok(cartDTO);
     }
 

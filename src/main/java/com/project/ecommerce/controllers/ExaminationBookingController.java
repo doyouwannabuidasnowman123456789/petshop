@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,6 +30,8 @@ public class ExaminationBookingController {
 
     @PostMapping("")
     public ResponseEntity<ExaminationBookingDTO> createExaminationBooking(@Valid @RequestBody CreateExaminationBookingRequestDTO examinationBookingRequestDTO) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        examinationBookingRequestDTO.setEmail(authentication.getName());
         ExaminationBookingDTO examinationBookingDTO = examinationBookingService.createExaminationBooking(examinationBookingRequestDTO);
         return ResponseEntity.ok(examinationBookingDTO);
     }
@@ -39,8 +43,9 @@ public class ExaminationBookingController {
     }
 
     @GetMapping("")
-    public ResponseEntity<?> getAllExaminationBookingsByEmail(@RequestParam(name = "email", required = true) String email) {
-        List<ExaminationBookingDTO> examinationBookingDTOs = examinationBookingService.getAllExaminationBookings(email);
+    public ResponseEntity<?> getAllExaminationBookingsByEmail() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        List<ExaminationBookingDTO> examinationBookingDTOs = examinationBookingService.getAllExaminationBookings(authentication.getName());
         return ResponseEntity.ok(examinationBookingDTOs);
     }
 

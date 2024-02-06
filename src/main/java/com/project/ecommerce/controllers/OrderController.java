@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,6 +30,8 @@ public class OrderController {
     public ResponseEntity<List<OrderDTO>> getOrdersByUser(
         @RequestParam(name = "email", required = true) String email 
     ) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        System.out.println(authentication.toString());
         List<OrderDTO> orderDTOs = orderService.getOrdersByUser(email);
         return ResponseEntity.ok(orderDTOs);
     }

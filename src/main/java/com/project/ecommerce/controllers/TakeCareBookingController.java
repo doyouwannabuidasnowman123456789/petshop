@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,7 +30,8 @@ public class TakeCareBookingController {
     private TakeCareBookingService takeCareBookingService;
 
     @PostMapping("")
-    public ResponseEntity<?> createTakeCareBooking(@Valid @RequestBody CreateTakeCareBookingRequestDTO createTakeCareBookingRequestDTO) {
+    public ResponseEntity<?> createTakeCareBooking(
+            @Valid @RequestBody CreateTakeCareBookingRequestDTO createTakeCareBookingRequestDTO) {
         if (!createTakeCareBookingRequestDTO.isEndDateAfterStartDate()) {
             throw new APIException("The end date must be after the start date");
         }
@@ -37,28 +40,34 @@ public class TakeCareBookingController {
             throw new APIException("The booking must be less than one month");
         }
 
-        TakeCareBookingDTO takeCareBookingDTO = takeCareBookingService.createTakeCareBooking(createTakeCareBookingRequestDTO);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        createTakeCareBookingRequestDTO.setEmail(authentication.getName());
+
+        TakeCareBookingDTO takeCareBookingDTO = takeCareBookingService
+                .createTakeCareBooking(createTakeCareBookingRequestDTO);
         return ResponseEntity.ok(takeCareBookingDTO);
+    }
+
+    @GetMapping("")
+    public ResponseEntity<?> getAllTakeCareBookingsByEmail() {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        List<TakeCareBookingDTO> takeCareBookingDTOs = takeCareBookingService
+                .getAllTakeCareBookingsByEmail(authentication.getName());
+        return ResponseEntity.ok(takeCareBookingDTOs);
     }
 
     @GetMapping("/all")
     public ResponseEntity<?> getAllBookings() {
-        
+
         List<TakeCareBookingDTO> takeCareBookingDTOs = takeCareBookingService.getAllTakeCareBookings();
         return ResponseEntity.ok(takeCareBookingDTOs);
-}
-    
-
-    @GetMapping("")
-    public ResponseEntity<?> getAllTakeCareBookingsByEmail(@RequestParam(name = "email", required = true) String email) {
-        
-            List<TakeCareBookingDTO> takeCareBookingDTOs = takeCareBookingService.getAllTakeCareBookingsByEmail(email);
-            return ResponseEntity.ok(takeCareBookingDTOs);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteTakeCareBookingById(@PathVariable("id") Long id) {
 
-        return ResponseEntity.ok(new SuccessResponseDTO("success", takeCareBookingService.deleteTakeCareBookingById(id)));
+        return ResponseEntity
+                .ok(new SuccessResponseDTO("success", takeCareBookingService.deleteTakeCareBookingById(id)));
     }
 }

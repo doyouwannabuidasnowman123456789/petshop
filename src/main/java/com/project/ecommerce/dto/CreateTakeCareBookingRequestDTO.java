@@ -9,9 +9,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import com.project.ecommerce.entities.EPetType;
 
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Future;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -21,8 +19,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CreateTakeCareBookingRequestDTO {
-    @NotEmpty(message = "Email is required")
-    @Email(message = "Email must be valid")
     private String email;
 
     @NotNull(message = "Start date is required")
