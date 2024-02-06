@@ -5,6 +5,8 @@ import java.util.UUID;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -30,19 +32,20 @@ public class UserController {
     @Autowired
     private ModelMapper modelMapper;
 
-    @GetMapping("/{id}")
-    public ResponseEntity<?> getUserById(@PathVariable("id") UUID id) {
-        User user = userRepository.findById(id).orElse(null);
+    @GetMapping("/email")
+    public ResponseEntity<?> getUserByEmail() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findByEmail(authentication.getName()).orElse(null);
+
         if (user == null) throw new APIException("User not found");
 
         UserDTO userDTO = modelMapper.map(user, UserDTO.class);
         return ResponseEntity.ok(userDTO);
     }
 
-    @GetMapping("/email/{email}")
-    public ResponseEntity<?> getUserByEmail(@PathVariable("email") String email) {
-        User user = userRepository.findByEmail(email).orElse(null);
-
+    @GetMapping("/id")
+    public ResponseEntity<?> getUserById(@PathVariable("id") UUID id) {
+        User user = userRepository.findById(id).orElse(null);
         if (user == null) throw new APIException("User not found");
 
         UserDTO userDTO = modelMapper.map(user, UserDTO.class);
