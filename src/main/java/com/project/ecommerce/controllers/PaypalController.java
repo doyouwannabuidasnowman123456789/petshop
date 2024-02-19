@@ -32,7 +32,6 @@ public class PaypalController {
 
     @PostMapping(value = "/capture")
     public CompletedOrder completePayment(@Valid @RequestBody PaypalCompleteRequestDTO paypalCompleteRequestDTO) {
-        System.out.println(paypalCompleteRequestDTO.getOrderID());
         return paypalService.completePayment(paypalCompleteRequestDTO.getOrderID());
     }
 }

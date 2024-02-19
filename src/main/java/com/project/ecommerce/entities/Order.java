@@ -45,6 +45,8 @@ public class Order {
     
     private double totalAmount;
 
+    private String userAddress;
+
     @Enumerated(EnumType.STRING)
     private EOrderStatus orderStatus;
 }

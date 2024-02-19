@@ -51,8 +51,6 @@ public class PaypalService {
                     .orElseThrow(NoSuchElementException::new)
                     .href();
 
-            System.out.println(order.status());
-
             // return order;
             return new PaymentOrder(order.status(),  order.id(), order.links());
         } catch (IOException e) {

@@ -32,29 +32,31 @@ public class UserController {
     @Autowired
     private ModelMapper modelMapper;
 
-    @GetMapping("/email")
-    public ResponseEntity<?> getUserByEmail() {
+    // @GetMapping("/email")
+    // public ResponseEntity<?> getUserByEmail() {
+    //     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    //     User user = userRepository.findByEmail(authentication.getName()).orElse(null);
+
+    //     if (user == null) throw new APIException("User not found");
+
+    //     UserDTO userDTO = modelMapper.map(user, UserDTO.class);
+    //     return ResponseEntity.ok(userDTO);
+    // }
+
+    @GetMapping("/profile")
+    public ResponseEntity<?> getUserById() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = userRepository.findByEmail(authentication.getName()).orElse(null);
-
         if (user == null) throw new APIException("User not found");
 
         UserDTO userDTO = modelMapper.map(user, UserDTO.class);
         return ResponseEntity.ok(userDTO);
     }
 
-    @GetMapping("/id")
-    public ResponseEntity<?> getUserById(@PathVariable("id") UUID id) {
-        User user = userRepository.findById(id).orElse(null);
-        if (user == null) throw new APIException("User not found");
-
-        UserDTO userDTO = modelMapper.map(user, UserDTO.class);
-        return ResponseEntity.ok(userDTO);
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<?> updateUserInfomation(@Valid @RequestBody UpdateUserRequestDTO userRequestDTO, @PathVariable("id") UUID id){
-        User user = userRepository.findById(id).orElse(null);
+    @PutMapping("/profile")
+    public ResponseEntity<?> updateUserInfomation(@Valid @RequestBody UpdateUserRequestDTO userRequestDTO){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findByEmail(authentication.getName()).orElse(null);
 
         if(user == null) throw new APIException("User not found");
         if (userRequestDTO.getEmail() != null) user.setEmail(userRequestDTO.getEmail());
