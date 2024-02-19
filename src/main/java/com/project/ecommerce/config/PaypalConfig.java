@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class PaypalConfiguration {
+public class PaypalConfig {
     @Bean
     public PayPalHttpClient getPaypalClient(
             @Value("${paypal.clientId}") String clientId,

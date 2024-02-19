@@ -29,14 +29,15 @@ public class PaypalService {
     private PayPalHttpClient payPalHttpClient;
 
     public PaymentOrder createPayment(BigDecimal fee) {
+        System.out.println(fee.toString());
         OrderRequest orderRequest = new OrderRequest();
         orderRequest.checkoutPaymentIntent("CAPTURE");
         AmountWithBreakdown amountBreakdown = new AmountWithBreakdown().currencyCode("USD").value(fee.toString());
         PurchaseUnitRequest purchaseUnitRequest = new PurchaseUnitRequest().amountWithBreakdown(amountBreakdown);
         orderRequest.purchaseUnits(List.of(purchaseUnitRequest));
         ApplicationContext applicationContext = new ApplicationContext()
-                .returnUrl("https://localhost:4200/capture")
-                .cancelUrl("https://localhost:4200/cancel");
+                .returnUrl("https://localhost:3000/capture")
+                .cancelUrl("https://localhost:3000/cancel");
         orderRequest.applicationContext(applicationContext);
         OrdersCreateRequest ordersCreateRequest = new OrdersCreateRequest().requestBody(orderRequest);
 
@@ -50,9 +51,13 @@ public class PaypalService {
                     .orElseThrow(NoSuchElementException::new)
                     .href();
 
-            return new PaymentOrder("success",  order.id(), redirectUrl);
+            System.out.println(order.status());
+
+            // return order;
+            return new PaymentOrder(order.status(),  order.id(), order.links());
         } catch (IOException e) {
             log.error(e.getMessage());
+            // return null;
             return new PaymentOrder("Error");
         }
     }
@@ -63,6 +68,8 @@ public class PaypalService {
         try {
             HttpResponse<Order> httpResponse = payPalHttpClient.execute(ordersCaptureRequest);
             if (httpResponse.result().status() != null) {
+                Order order = httpResponse.result();
+                System.out.println(order.status());
                 return new CompletedOrder("success", token);
             }
         } catch (IOException e) {
