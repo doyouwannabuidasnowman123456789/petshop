@@ -2,6 +2,7 @@ package com.project.ecommerce.services;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -17,18 +18,29 @@ import com.paypal.orders.OrderRequest;
 import com.paypal.orders.OrdersCaptureRequest;
 import com.paypal.orders.OrdersCreateRequest;
 import com.paypal.orders.PurchaseUnitRequest;
+import com.project.ecommerce.dto.PaypalOrderRequestDTO;
 import com.project.ecommerce.entities.CompletedOrder;
+import com.project.ecommerce.entities.EOrderStatus;
+import com.project.ecommerce.entities.EPaymentMethod;
 import com.project.ecommerce.entities.PaymentOrder;
 
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
+@Transactional
 public class PaypalService {
     @Autowired
     private PayPalHttpClient payPalHttpClient;
 
-    public PaymentOrder createPayment(BigDecimal fee) {
+    @Autowired
+    private OrderService orderService;
+
+    public PaymentOrder createPayment(PaypalOrderRequestDTO paypalOrderRequestDTO, String email) {
+        System.out.println(paypalOrderRequestDTO.getAddress());
+        DecimalFormat df = new DecimalFormat("####0.00");
+        BigDecimal fee = new BigDecimal(df.format(paypalOrderRequestDTO.getTotal()));
         System.out.println(fee.toString());
         OrderRequest orderRequest = new OrderRequest();
         orderRequest.checkoutPaymentIntent("CAPTURE");
@@ -51,7 +63,8 @@ public class PaypalService {
                     .orElseThrow(NoSuchElementException::new)
                     .href();
 
-            // return order;
+            // Create order
+            orderService.createOrder(email, EPaymentMethod.CREDIT_CARD, paypalOrderRequestDTO.getAddress());
             return new PaymentOrder(order.status(),  order.id(), order.links());
         } catch (IOException e) {
             log.error(e.getMessage());
@@ -68,7 +81,7 @@ public class PaypalService {
             if (httpResponse.result().status() != null) {
                 Order order = httpResponse.result();
                 System.out.println(order.status());
-                return new CompletedOrder("success", token);
+                return new CompletedOrder("success", token, "https://localhost:3000/cart");
             }
         } catch (IOException e) {
             log.error(e.getMessage());

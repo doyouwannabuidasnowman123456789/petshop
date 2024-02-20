@@ -57,7 +57,7 @@ public class OrderService implements IOrderService {
     public ModelMapper modelMapper;
 
     @Override
-    public OrderDTO createOrder(String email, EPaymentMethod paymentMethod) {
+    public Order createOrder(String email, EPaymentMethod paymentMethod, String userAddress) {
         Cart cart = cartRepository.findCartByEmail(email);
 
         if (cart == null) {
@@ -68,7 +68,7 @@ public class OrderService implements IOrderService {
 
         order.setEmail(email);
 		order.setOrderDate(LocalDate.now());
-
+		order.setUserAddress(userAddress);
 		order.setTotalAmount(cart.getTotalPrice());
 		order.setOrderStatus(EOrderStatus.PENDING);
 
@@ -95,7 +95,6 @@ public class OrderService implements IOrderService {
 
 			orderItem.setProduct(cartItem.getProduct());
 			orderItem.setQuantity(cartItem.getQuantity());
-			orderItem.setDiscount(cartItem.getDiscount());
 			orderItem.setOrderedProductPrice(cartItem.getProductPrice());
 			orderItem.setOrder(savedOrder);
 
@@ -114,11 +113,10 @@ public class OrderService implements IOrderService {
 			product.setQuantity(product.getQuantity() - quantity);
 		});
 
-		OrderDTO orderDTO = modelMapper.map(savedOrder, OrderDTO.class);
-		
-		orderItems.forEach(item -> orderDTO.getOrderItems().add(modelMapper.map(item, OrderItemDTO.class)));
+		cart.setTotalPrice(0.0);
+		cartRepository.save(cart);
 
-		return orderDTO;
+		return savedOrder;
     }
 
     @Override

@@ -3,6 +3,8 @@ package com.project.ecommerce.controllers;
 import java.math.BigDecimal;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,7 +29,10 @@ public class PaypalController {
     @PostMapping(value = "/init")
     public PaymentOrder createPayment(
             @Valid @RequestBody PaypalOrderRequestDTO paypalOrderRequestDTO) {
-        return paypalService.createPayment(new BigDecimal(paypalOrderRequestDTO.getTotal()));
+                System.out.println(paypalOrderRequestDTO.getAddress());
+                Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        // return paypalService.createPayment(new BigDecimal(paypalOrderRequestDTO.getTotal()));
+        return paypalService.createPayment(paypalOrderRequestDTO, authentication.getName());
     }
 
     @PostMapping(value = "/capture")

@@ -15,11 +15,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreateOrderRequestDTO {
-    @Email
     @NotEmpty
-    private String email;
-
-    @NotNull
-    @Enumerated(EnumType.STRING)
-    private EPaymentMethod paymentMethod;
+    private String userAddress;
 }

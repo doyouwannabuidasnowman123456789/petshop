@@ -2,6 +2,7 @@ package com.project.ecommerce.controllers;
 
 import java.util.List;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -16,6 +17,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.project.ecommerce.dto.CreateOrderRequestDTO;
 import com.project.ecommerce.dto.OrderDTO;
+import com.project.ecommerce.dto.OrderItemDTO;
+import com.project.ecommerce.entities.EPaymentMethod;
+import com.project.ecommerce.entities.Order;
 import com.project.ecommerce.services.OrderService;
 
 import jakarta.validation.Valid;
@@ -26,19 +30,25 @@ public class OrderController {
     @Autowired
     private OrderService orderService;
 
+    @Autowired
+    private ModelMapper modelMapper;
+
     @GetMapping("")
     public ResponseEntity<List<OrderDTO>> getOrdersByUser(
-        @RequestParam(name = "email", required = true) String email 
+        
     ) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        System.out.println(authentication.toString());
-        List<OrderDTO> orderDTOs = orderService.getOrdersByUser(email);
+        List<OrderDTO> orderDTOs = orderService.getOrdersByUser(authentication.getName());
         return ResponseEntity.ok(orderDTOs);
     }
 
     @PostMapping("")
     public ResponseEntity<OrderDTO> createOrder(@Valid @RequestBody CreateOrderRequestDTO createOrderRequestDTO) {
-        OrderDTO orderDTO = orderService.createOrder(createOrderRequestDTO.getEmail(), createOrderRequestDTO.getPaymentMethod());
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Order order = orderService.createOrder(authentication.getName(), EPaymentMethod.CAST, createOrderRequestDTO.getUserAddress());
+        OrderDTO orderDTO = modelMapper.map(order, OrderDTO.class);
+		
+		order.getOrderItems().forEach(item -> orderDTO.getOrderItems().add(modelMapper.map(item, OrderItemDTO.class)));
         return ResponseEntity.ok(orderDTO);
     }
 
