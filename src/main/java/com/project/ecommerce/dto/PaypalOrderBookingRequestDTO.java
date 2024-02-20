@@ -8,10 +8,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class PaypalOrderRequestDTO {
+public class PaypalOrderBookingRequestDTO {
     @NotNull
     private double total;
-
-    @NotNull(message = "Not blank message")
-    private String address;
 }

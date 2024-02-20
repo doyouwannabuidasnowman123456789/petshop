@@ -18,9 +18,9 @@ import com.paypal.orders.OrderRequest;
 import com.paypal.orders.OrdersCaptureRequest;
 import com.paypal.orders.OrdersCreateRequest;
 import com.paypal.orders.PurchaseUnitRequest;
+import com.project.ecommerce.dto.PaypalOrderBookingRequestDTO;
 import com.project.ecommerce.dto.PaypalOrderRequestDTO;
 import com.project.ecommerce.entities.CompletedOrder;
-import com.project.ecommerce.entities.EOrderStatus;
 import com.project.ecommerce.entities.EPaymentMethod;
 import com.project.ecommerce.entities.PaymentOrder;
 
@@ -82,6 +82,55 @@ public class PaypalService {
                 Order order = httpResponse.result();
                 System.out.println(order.status());
                 return new CompletedOrder("success", token, "https://localhost:3000/cart");
+            }
+        } catch (IOException e) {
+            log.error(e.getMessage());
+        }
+        return new CompletedOrder("error");
+    }
+
+    public PaymentOrder createPaymentForBooking(PaypalOrderBookingRequestDTO paypalOrderBookingRequestDTO, String email) {
+        DecimalFormat df = new DecimalFormat("####0.00");
+        BigDecimal fee = new BigDecimal(df.format(paypalOrderBookingRequestDTO.getTotal()));
+        System.out.println(fee.toString());
+        OrderRequest orderRequest = new OrderRequest();
+        orderRequest.checkoutPaymentIntent("CAPTURE");
+        AmountWithBreakdown amountBreakdown = new AmountWithBreakdown().currencyCode("USD").value(fee.toString());
+        PurchaseUnitRequest purchaseUnitRequest = new PurchaseUnitRequest().amountWithBreakdown(amountBreakdown);
+        orderRequest.purchaseUnits(List.of(purchaseUnitRequest));
+        ApplicationContext applicationContext = new ApplicationContext()
+                .returnUrl("https://localhost:3000/capture")
+                .cancelUrl("https://localhost:3000/cancel");
+        orderRequest.applicationContext(applicationContext);
+        OrdersCreateRequest ordersCreateRequest = new OrdersCreateRequest().requestBody(orderRequest);
+
+        try {
+            HttpResponse<Order> orderHttpResponse = payPalHttpClient.execute(ordersCreateRequest);
+            Order order = orderHttpResponse.result();
+
+            String redirectUrl = order.links().stream()
+                    .filter(link -> "approve".equals(link.rel()))
+                    .findFirst()
+                    .orElseThrow(NoSuchElementException::new)
+                    .href();
+
+            // Create order
+            return new PaymentOrder(order.status(),  order.id(), order.links());
+        } catch (IOException e) {
+            log.error(e.getMessage());
+            // return null;
+            return new PaymentOrder("Error");
+        }
+    }
+
+    public CompletedOrder completePaymentForBooking(String token) {
+        OrdersCaptureRequest ordersCaptureRequest = new OrdersCaptureRequest(token);
+        try {
+            HttpResponse<Order> httpResponse = payPalHttpClient.execute(ordersCaptureRequest);
+            if (httpResponse.result().status() != null) {
+                Order order = httpResponse.result();
+                System.out.println(order.status());
+                return new CompletedOrder("success", token, "https://localhost:3000/my-take-care");
             }
         } catch (IOException e) {
             log.error(e.getMessage());

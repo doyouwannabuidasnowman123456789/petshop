@@ -10,6 +10,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import com.project.ecommerce.entities.EPetType;
 
 import jakarta.validation.constraints.Future;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -35,6 +36,10 @@ public class CreateTakeCareBookingRequestDTO {
     private EPetType petType;
 
     private String note;
+
+    @NotNull
+    @Min(value = 0, message = "Total price must be greater than 0")
+    private double totalPrice;
 
     public long getNumberOfDays() {
         LocalDate localStartDate = startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();

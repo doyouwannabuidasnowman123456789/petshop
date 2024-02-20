@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.project.ecommerce.dto.PaypalCompleteRequestDTO;
+import com.project.ecommerce.dto.PaypalOrderBookingRequestDTO;
 import com.project.ecommerce.dto.PaypalOrderRequestDTO;
 import com.project.ecommerce.entities.CompletedOrder;
 import com.project.ecommerce.entities.PaymentOrder;
@@ -38,5 +39,18 @@ public class PaypalController {
     @PostMapping(value = "/capture")
     public CompletedOrder completePayment(@Valid @RequestBody PaypalCompleteRequestDTO paypalCompleteRequestDTO) {
         return paypalService.completePayment(paypalCompleteRequestDTO.getOrderID());
+    }
+
+    @PostMapping(value = "/booking/init")
+    public PaymentOrder createPaymentForBooking(
+            @Valid @RequestBody PaypalOrderBookingRequestDTO paypalOrderBookingRequestDTO) {
+                Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        // return paypalService.createPayment(new BigDecimal(paypalOrderRequestDTO.getTotal()));
+        return paypalService.createPaymentForBooking(paypalOrderBookingRequestDTO, authentication.getName());
+    }
+
+    @PostMapping(value = "/booking/capture")
+    public CompletedOrder completePaymentForBooking(@Valid @RequestBody PaypalCompleteRequestDTO paypalCompleteRequestDTO) {
+        return paypalService.completePaymentForBooking(paypalCompleteRequestDTO.getOrderID());
     }
 }

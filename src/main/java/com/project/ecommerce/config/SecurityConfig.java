@@ -94,6 +94,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/test/**").permitAll()
                         .requestMatchers("/api/paypal/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/config").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/category/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "api/product/images/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/product/**").permitAll()
@@ -135,6 +136,7 @@ public class SecurityConfig {
                         // User
                         .requestMatchers(HttpMethod.GET, "/api/users").hasAnyRole("ADMIN", "USER")
                         .requestMatchers(HttpMethod.GET, "/api/users/**").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers(HttpMethod.PUT, "/api/config").hasAnyRole("ADMIN")
                         .anyRequest().authenticated());
 
         

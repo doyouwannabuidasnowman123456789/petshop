@@ -1,8 +1,5 @@
 package com.project.ecommerce.services;
 
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -12,17 +9,26 @@ import org.springframework.stereotype.Service;
 
 import com.project.ecommerce.dto.CreateTakeCareBookingRequestDTO;
 import com.project.ecommerce.dto.TakeCareBookingDTO;
+import com.project.ecommerce.entities.BookingConfig;
 import com.project.ecommerce.entities.TakeCareBooking;
 import com.project.ecommerce.exeptions.APIException;
+import com.project.ecommerce.exeptions.ResourceNotFoundException;
+import com.project.ecommerce.repositories.BookingConfigRepository;
 import com.project.ecommerce.repositories.TakeCareBookingRepository;
 
+import jakarta.transaction.Transactional;
+
 @Service
+@Transactional
 public class TakeCareBookingService implements ITakeCareBookingService{
     @Autowired
     private TakeCareBookingRepository takeCareBookingRepository;
 
     @Autowired
     private ModelMapper modelMapper;
+
+    @Autowired
+    private BookingConfigRepository bookingConfigRepository;
 
     @Override
     public List<TakeCareBookingDTO> getAllTakeCareBookingsByEmail(String email) {
@@ -39,24 +45,27 @@ public class TakeCareBookingService implements ITakeCareBookingService{
 
     @Override
     public TakeCareBookingDTO createTakeCareBooking(CreateTakeCareBookingRequestDTO createTakeCareBookingRequestDTO) {
+        BookingConfig config = bookingConfigRepository.findById("SOKE")
+            .orElseThrow(() -> new ResourceNotFoundException("BookingConfig", "id", "SOKE"));
+
+            if(config.getCurrentTakeCareBooking() == config.getMaxPlaceTakeCare()) {
+                throw new APIException("Run out of slot");
+            }
         TakeCareBooking takeCareBooking = new TakeCareBooking();
         takeCareBooking.setEmail(createTakeCareBookingRequestDTO.getEmail());
         takeCareBooking.setStartDate(createTakeCareBookingRequestDTO.getStartDate());
         takeCareBooking.setEndDate(createTakeCareBookingRequestDTO.getEndDate());
         takeCareBooking.setPetType(createTakeCareBookingRequestDTO.getPetType());
-        Double price = 0.0;
-        if (createTakeCareBookingRequestDTO.getPetType().toString().equals("SENIOR_DOG")) {
-            System.out.println("SENIOR_DOG");
-            price = 10.0;
-        } else {
-            price = 5.0;
-        }
 
         long numberDay = createTakeCareBookingRequestDTO.getNumberOfDays();
-        takeCareBooking.setPrice(price * numberDay);
+        takeCareBooking.setPrice(createTakeCareBookingRequestDTO.getTotalPrice() * numberDay);
         takeCareBooking.setNote(createTakeCareBookingRequestDTO.getNote());
         takeCareBooking.setStatus(false);
 
+        // Minus 1 slot in bookings config
+        
+        config.setCurrentTakeCareBooking(config.getCurrentTakeCareBooking() + 1);
+        bookingConfigRepository.save(config);
         takeCareBookingRepository.save(takeCareBooking);
 
         TakeCareBookingDTO takeCareBookingDTO = modelMapper.map(takeCareBooking, TakeCareBookingDTO.class);
@@ -67,6 +76,11 @@ public class TakeCareBookingService implements ITakeCareBookingService{
     public String deleteTakeCareBookingById(Long id) {
         TakeCareBooking takeCareBooking = takeCareBookingRepository.findById(id).orElseThrow(() -> new APIException("No take care booking found for this id: " + id));
 
+        BookingConfig config = bookingConfigRepository.findById("SOKE")
+            .orElseThrow(() -> new ResourceNotFoundException("BookingConfig", "id", "SOKE"));
+
+        config.setCurrentTakeCareBooking(config.getCurrentTakeCareBooking() - 1);
+        bookingConfigRepository.save(config);
         takeCareBookingRepository.delete(takeCareBooking);
         return "Take care booking " + id + " deleted successfully";
     }
