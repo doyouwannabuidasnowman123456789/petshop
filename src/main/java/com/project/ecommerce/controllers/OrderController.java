@@ -49,6 +49,7 @@ public class OrderController {
 
     @PostMapping("")
     public ResponseEntity<OrderDTO> createOrder(@Valid @RequestBody CreateOrderRequestDTO createOrderRequestDTO) {
+        System.out.println("Here");
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(createOrderRequestDTO.getPaymentMethod() == null) {
             createOrderRequestDTO.setPaymentMethod(EPaymentMethod.CAST);

@@ -22,6 +22,7 @@ public class OrderDTO {
 	private LocalDate orderDate;
 	private PaymentDTO payment;
 	private Double totalAmount;
+	private String address;
 
     @Enumerated(EnumType.STRING)
 	private EOrderStatus orderStatus = EOrderStatus.PENDING;
