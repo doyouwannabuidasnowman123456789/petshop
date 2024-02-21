@@ -18,27 +18,8 @@ public class BookingConfigService {
             .orElseThrow(() -> new ResourceNotFoundException("BookingConfig", "id", "SOKE"));
 
             config.setMaxPlaceTakeCare(updateBookingConfigDTO.getMaxPlaceTakeCare());
-			config.setCurrentTakeCareBooking(updateBookingConfigDTO.getCurrentTakeCareBooking());
+			
 			config.setMaxPlaceExamination(updateBookingConfigDTO.getMaxPlaceExamination());
-			config.setCurrentExaminationBooking(updateBookingConfigDTO.getCurrentExaminationBooking());
-
-			config.setPriceSlotSizeS(updateBookingConfigDTO.getPriceSlotSizeS());
-			config.setPriceSlotSizeM(updateBookingConfigDTO.getPriceSlotSizeM());
-			config.setPriceSlotSizeL(updateBookingConfigDTO.getPriceSlotSizeL());
-
-			config.setFood1(updateBookingConfigDTO.getFood1());
-			config.setFood1Price(updateBookingConfigDTO.getFood1Price());
-
-			config.setFood2(updateBookingConfigDTO.getFood2());
-			config.setFood2Price(updateBookingConfigDTO.getFood2Price());
-
-			config.setFood3(updateBookingConfigDTO.getFood3());
-			config.setFood3Price(updateBookingConfigDTO.getFood3Price());
-
-			config.setService1(updateBookingConfigDTO.getService1());
-			config.setService1Price(updateBookingConfigDTO.getService1Price());
-			config.setService2(updateBookingConfigDTO.getService2());
-			config.setService2Price(updateBookingConfigDTO.getService2Price());
 
             bookingConfigRepository.save(config);
 

@@ -130,6 +130,18 @@ public class OrderService implements IOrderService {
 		return modelMapper.map(order, OrderDTO.class);
     }
 
+	public List<OrderDTO> getOrders() {
+		List<Order> orders = orderRepository.findAll();
+		List<OrderDTO> orderDTOs = orders.stream().map(order -> modelMapper.map(order, OrderDTO.class))
+				.collect(Collectors.toList());
+
+		if (orderDTOs.size() == 0) {
+			throw new APIException("No orders ");
+		}
+
+		return orderDTOs;
+	}
+
     @Override
     public List<OrderDTO> getOrdersByUser(String email) {
         List<Order> orders = orderRepository.findAllByEmail(email);

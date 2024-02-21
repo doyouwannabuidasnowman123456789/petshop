@@ -52,6 +52,13 @@ public class OrderController {
         return ResponseEntity.ok(orderDTO);
     }
 
+    @GetMapping("/all")
+    public ResponseEntity<List<OrderDTO>> getOrders() 
+     {
+        List<OrderDTO> orderDTOs = orderService.getOrders();
+        return ResponseEntity.ok(orderDTOs);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<OrderDTO> getOrder(
         @PathVariable("id") Long orderId,

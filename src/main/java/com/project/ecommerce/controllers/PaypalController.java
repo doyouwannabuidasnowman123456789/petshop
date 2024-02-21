@@ -45,6 +45,7 @@ public class PaypalController {
     public PaymentOrder createPaymentForBooking(
             @Valid @RequestBody PaypalOrderBookingRequestDTO paypalOrderBookingRequestDTO) {
                 Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+                System.out.println("Here");
         // return paypalService.createPayment(new BigDecimal(paypalOrderRequestDTO.getTotal()));
         return paypalService.createPaymentForBooking(paypalOrderBookingRequestDTO, authentication.getName());
     }

@@ -18,6 +18,7 @@ import com.paypal.orders.OrderRequest;
 import com.paypal.orders.OrdersCaptureRequest;
 import com.paypal.orders.OrdersCreateRequest;
 import com.paypal.orders.PurchaseUnitRequest;
+import com.project.ecommerce.dto.CreateTakeCareBookingRequestDTO;
 import com.project.ecommerce.dto.PaypalOrderBookingRequestDTO;
 import com.project.ecommerce.dto.PaypalOrderRequestDTO;
 import com.project.ecommerce.entities.CompletedOrder;
@@ -37,6 +38,9 @@ public class PaypalService {
     @Autowired
     private OrderService orderService;
 
+    @Autowired
+    private TakeCareBookingService takeCareBookingService;
+
     public PaymentOrder createPayment(PaypalOrderRequestDTO paypalOrderRequestDTO, String email) {
         System.out.println(paypalOrderRequestDTO.getAddress());
         DecimalFormat df = new DecimalFormat("####0.00");
@@ -48,8 +52,8 @@ public class PaypalService {
         PurchaseUnitRequest purchaseUnitRequest = new PurchaseUnitRequest().amountWithBreakdown(amountBreakdown);
         orderRequest.purchaseUnits(List.of(purchaseUnitRequest));
         ApplicationContext applicationContext = new ApplicationContext()
-                .returnUrl("https://localhost:3000/capture")
-                .cancelUrl("https://localhost:3000/cancel");
+                .returnUrl("http://localhost:3001/capture")
+                .cancelUrl("http://localhost:3001/cancel");
         orderRequest.applicationContext(applicationContext);
         OrdersCreateRequest ordersCreateRequest = new OrdersCreateRequest().requestBody(orderRequest);
 
@@ -81,7 +85,7 @@ public class PaypalService {
             if (httpResponse.result().status() != null) {
                 Order order = httpResponse.result();
                 System.out.println(order.status());
-                return new CompletedOrder("success", token, "https://localhost:3000/cart");
+                return new CompletedOrder("success", token, "http://localhost:3001/cart");
             }
         } catch (IOException e) {
             log.error(e.getMessage());
@@ -99,8 +103,8 @@ public class PaypalService {
         PurchaseUnitRequest purchaseUnitRequest = new PurchaseUnitRequest().amountWithBreakdown(amountBreakdown);
         orderRequest.purchaseUnits(List.of(purchaseUnitRequest));
         ApplicationContext applicationContext = new ApplicationContext()
-                .returnUrl("https://localhost:3000/capture")
-                .cancelUrl("https://localhost:3000/cancel");
+                .returnUrl("http://localhost:3001/capture")
+                .cancelUrl("http://localhost:3001/cancel");
         orderRequest.applicationContext(applicationContext);
         OrdersCreateRequest ordersCreateRequest = new OrdersCreateRequest().requestBody(orderRequest);
 
@@ -114,7 +118,15 @@ public class PaypalService {
                     .orElseThrow(NoSuchElementException::new)
                     .href();
 
-            // Create order
+            // Create take care
+            // CreateTakeCareBookingRequestDTO careBookingRequestDTO = new CreateTakeCareBookingRequestDTO();
+            // careBookingRequestDTO.setEmail(email);
+            // careBookingRequestDTO.setStartDate(paypalOrderBookingRequestDTO.getStartDate());
+            // careBookingRequestDTO.setEndDate(paypalOrderBookingRequestDTO.getEndDate());
+            // careBookingRequestDTO.setPetType(paypalOrderBookingRequestDTO.getPetType());
+            // careBookingRequestDTO.setNote(paypalOrderBookingRequestDTO.getNote());
+            // careBookingRequestDTO.setTotalPrice(paypalOrderBookingRequestDTO.getTotalPrice());
+            // takeCareBookingService.createTakeCareBooking(careBookingRequestDTO);
             return new PaymentOrder(order.status(),  order.id(), order.links());
         } catch (IOException e) {
             log.error(e.getMessage());
@@ -130,7 +142,7 @@ public class PaypalService {
             if (httpResponse.result().status() != null) {
                 Order order = httpResponse.result();
                 System.out.println(order.status());
-                return new CompletedOrder("success", token, "https://localhost:3000/my-take-care");
+                return new CompletedOrder("success", token, "http://localhost:3001/my-take-care");
             }
         } catch (IOException e) {
             log.error(e.getMessage());
