@@ -157,7 +157,7 @@ public class OrderService implements IOrderService {
     }
 
     @Override
-    public OrderDTO updateOrder(String email, Long orderId, EOrderStatus orderStatus) {
+    public String updateOrder(String email, Long orderId, EOrderStatus orderStatus) {
         Order order = orderRepository.findOrderByEmailAndOrderId(email, orderId);
 
 		if (order == null) {
@@ -165,8 +165,9 @@ public class OrderService implements IOrderService {
 		}
 
 		order.setOrderStatus(orderStatus);
+		orderRepository.save(order);
 
-		return modelMapper.map(order, OrderDTO.class);
+		return "Successfully updated order";
     }
     
 }

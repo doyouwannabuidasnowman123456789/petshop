@@ -120,10 +120,11 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/cart/**").hasAnyRole("ADMIN", "USER")
                         .requestMatchers(HttpMethod.GET, "/api/cart").hasAnyRole("ADMIN", "USER")
                         // Order
-                        .requestMatchers(HttpMethod.GET, "/api/orders/all").hasAnyRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/api/orders").hasAnyRole("ADMIN", "USER")
-                        .requestMatchers(HttpMethod.GET, "/api/orders/**").hasAnyRole("ADMIN", "USER")
                         .requestMatchers(HttpMethod.POST, "/api/orders").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers(HttpMethod.GET, "/api/orders/all").hasAnyRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/orders/**").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers(HttpMethod.PUT, "/api/orders/**").hasAnyRole("ADMIN")
                         // Examination Booking
                         .requestMatchers(HttpMethod.GET, "/api/examination-bookings").hasAnyRole("ADMIN", "USER")
                         .requestMatchers(HttpMethod.GET, "/api/examination-bookings/all").hasAnyRole("ADMIN")

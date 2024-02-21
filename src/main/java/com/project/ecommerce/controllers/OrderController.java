@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,11 +19,15 @@ import org.springframework.web.bind.annotation.RestController;
 import com.project.ecommerce.dto.CreateOrderRequestDTO;
 import com.project.ecommerce.dto.OrderDTO;
 import com.project.ecommerce.dto.OrderItemDTO;
+import com.project.ecommerce.dto.SuccessResponseDTO;
+import com.project.ecommerce.dto.UpdateOrderDTO;
 import com.project.ecommerce.entities.EPaymentMethod;
 import com.project.ecommerce.entities.Order;
 import com.project.ecommerce.services.OrderService;
 
 import jakarta.validation.Valid;
+import org.springframework.web.bind.annotation.PutMapping;
+
 
 @RestController
 @RequestMapping("/api/orders")
@@ -45,7 +50,10 @@ public class OrderController {
     @PostMapping("")
     public ResponseEntity<OrderDTO> createOrder(@Valid @RequestBody CreateOrderRequestDTO createOrderRequestDTO) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Order order = orderService.createOrder(authentication.getName(), EPaymentMethod.CAST, createOrderRequestDTO.getUserAddress());
+        if(createOrderRequestDTO.getPaymentMethod() == null) {
+            createOrderRequestDTO.setPaymentMethod(EPaymentMethod.CAST);
+        }
+        Order order = orderService.createOrder(authentication.getName(), createOrderRequestDTO.getPaymentMethod(), createOrderRequestDTO.getUserAddress());
         OrderDTO orderDTO = modelMapper.map(order, OrderDTO.class);
 		
 		order.getOrderItems().forEach(item -> orderDTO.getOrderItems().add(modelMapper.map(item, OrderItemDTO.class)));
@@ -67,5 +75,10 @@ public class OrderController {
     ) {
         OrderDTO orderDTO = orderService.getOrder(email, orderId);
         return ResponseEntity.ok(orderDTO);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<SuccessResponseDTO> updateStatusOrder(@PathVariable Long id, @Valid @RequestBody UpdateOrderDTO updateOrderDTO) {
+        return ResponseEntity.ok(new SuccessResponseDTO("success", orderService.updateOrder(updateOrderDTO.getEmail(), id, updateOrderDTO.getStatus())));
     }
 }

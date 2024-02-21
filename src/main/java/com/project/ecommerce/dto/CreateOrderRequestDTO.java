@@ -17,4 +17,6 @@ import lombok.NoArgsConstructor;
 public class CreateOrderRequestDTO {
     @NotEmpty
     private String userAddress;
+
+    private EPaymentMethod paymentMethod;
 }
