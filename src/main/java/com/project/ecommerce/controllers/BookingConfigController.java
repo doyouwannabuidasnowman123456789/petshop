@@ -28,7 +28,7 @@ public class BookingConfigController {
 
     @PutMapping("")
     public ResponseEntity<?> updateBookingConfig(@Valid @RequestBody UpdateBookingConfigDTO updateBookingConfigDTO) {
-        //TODO: process PUT request
+    
         return ResponseEntity.ok(new SuccessResponseDTO("success", bookingConfigService.updateBookingConfig(updateBookingConfigDTO)));
     }
 }
